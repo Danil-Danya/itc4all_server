@@ -1,7 +1,7 @@
 import sequelize from "../plugins/sequelize.js";
 import { DataTypes } from "sequelize";
 
-const Roles = sequelize.define('roles', {
+const MentrosPreviews = sequelize.define('mentros_previews', {
     id: { 
         type: DataTypes.INTEGER, 
         allowNull: false, 
@@ -10,12 +10,12 @@ const Roles = sequelize.define('roles', {
         unique: true 
     },
 
-    name: { 
-        type: DataTypes.ENUM('SUPER_ADMIN', 'ADMIN', 'USER'), 
+    path: {
+        type: DataTypes.TEXT,
         allowNull: false, 
     },
 }, {
     timestamps: false,
 })
 
-export default Roles;
+export default MentrosPreviews;

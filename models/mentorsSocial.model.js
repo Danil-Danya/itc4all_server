@@ -1,7 +1,7 @@
 import sequelize from "../plugins/sequelize.js";
 import { DataTypes } from "sequelize";
 
-const Avatars = sequelize.define('avatars', {
+const MentrosSocials = sequelize.define('mentors_socials', {
     id: { 
         type: DataTypes.INTEGER, 
         allowNull: false, 
@@ -10,12 +10,23 @@ const Avatars = sequelize.define('avatars', {
         unique: true 
     },
 
-    path: {
+    instagram: {
         type: DataTypes.TEXT,
-        allowNull: false, 
+    },
+
+    telegram: {
+        type: DataTypes.TEXT,
+    },
+
+    gmail: {
+        type: DataTypes.TEXT,
+    },
+
+    github: {
+        type: DataTypes.TEXT,
     },
 }, {
     timestamps: false,
 })
 
-export default Avatars;
+export default MentrosSocials;
