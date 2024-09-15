@@ -33,5 +33,16 @@ const Transactions = sequelize.define('transactions', {
     payment_method: {
         type: DataTypes.STRING,
         allowNull: false, 
-    }
+    },
+
+    operator_unical_id: {
+        type: DataTypes.STRING,
+    },
+
+    state: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    },
 })
+
+export default Transactions;

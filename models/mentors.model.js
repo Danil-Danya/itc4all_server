@@ -29,6 +29,11 @@ const Mentros = sequelize.define('mentors', {
         type: DataTypes.STRING,
         allowNull: false, 
     },
+
+    experience: {
+        type: DataTypes.STRING,
+        allowNull: false, 
+    }
 })
 
 export default Mentros;

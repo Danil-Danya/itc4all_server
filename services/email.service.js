@@ -1,4 +1,5 @@
 import nodemailer from "nodemailer";
+import generateVerifyTemplate from '../static/email/templates/verify.templates.js';
 
 class EmailService {
     constructor () {
@@ -17,12 +18,35 @@ class EmailService {
         await this.transporter.sendMail({
             from: process.env.SMTP_USER,
             subject: 'Verify account ACT4ALL',
+            html: generateVerifyTemplate(link),
+            to,
+        })
+    }
+
+    async sendZoomSessionLink (to, link) {
+        await this.transporter.sendMail({
+            from: process.env.SMTP_USER,
+            subject: 'Verify account ACT4ALL',
             html: `
                 <div>
-                    <h1>For activation go to link:</h1>
+                    <h1>Your zoom session link:</h1>
                     <a href="${link}">${link}</a>
                 </div>
-            
+            `,
+            text: '',
+            to,
+        })
+    }
+
+    async sendCheckFromBuyedProduct () {
+        await this.transporter.sendMail({
+            from: process.env.SMTP_USER,
+            subject: 'Verify account ACT4ALL',
+            html: `
+                <div>
+                    <h1>Your zoom session link:</h1>
+                    <a href="${link}">${link}</a>
+                </div>
             `,
             text: '',
             to,

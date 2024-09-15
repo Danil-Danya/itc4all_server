@@ -13,6 +13,8 @@ import CourseCategoriesModel from './courseCategories.model.js';
 import CourseListModel from './courseList.model.js';
 import CoursePreviewModel from './coursePreview.model.js';
 import VideosModel from './videos.model.js';
+import Transactions from './transactions.model.js';
+import IsBuedCourse from './courseBuyed.model.js';
 
 UserModel.hasOne(ProfileModel, { as: 'profile', foreignKey: 'profile_id' });
 UserModel.hasOne(AvararModel, { as: 'avatar', foreignKey: 'avatar_id' });
@@ -25,6 +27,10 @@ CourseCategoriesModel.belongsToMany(CourseModel, { through: 'courses_categories_
 CourseModel.hasMany(CourseListModel, { as: 'course_list', foreignKey: 'course_id' });
 CourseModel.hasOne(CoursePreviewModel, { as: 'course_preview', foreignKey: 'course_preview_id' });
 CourseModel.hasMany(VideosModel, { as: 'videos', foreignKey: 'course_id' });
+
+UserModel.belongsToMany(CourseModel, { through: IsBuedCourse, foreignKey: 'userId' });
+CourseModel.belongsToMany(UserModel, { through: IsBuedCourse, foreignKey: 'courseId' });
+
 VideosModel.belongsTo(CourseModel, { as: 'course', foreignKey: 'course_id' });
 
 sequelize.sync();
@@ -42,5 +48,6 @@ export default {
     CourseCategoriesModel,
     CourseListModel,
     CoursePreviewModel,
-    VideosModel 
+    VideosModel,
+    Transactions
 }

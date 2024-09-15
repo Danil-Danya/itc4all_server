@@ -1,7 +1,7 @@
-import UserModel from '../models/user.model';
-import ProfileModel from '../models/profile.model';
+import UserModel from '../models/user.model.js';
+import ProfileModel from '../models/profile.model.js';
 
-import ApiError from '../exeptions/api.error';
+import ApiError from '../exeptions/api.error.js';
 
 const createProfile = async (first_name, last_name, user_id) => {
     if (!first_name || !last_name) {

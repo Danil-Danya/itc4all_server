@@ -1,27 +1,38 @@
-import { createUsers, getOneUser } from "../repositories/user.repository";
-import ApiError from "../exeptions/api.error";
-import jsonwebtockenService from "./jsonwebtocken.service";
+import { createUsers, getOneUser, editeUser } from "../repositories/user.repository.js";
+import { createProfile } from "../repositories/profile.repository.js";
+import { getProfile } from "../repositories/profile.repository.js";
+
+import jsonwebtockenService from "./jsonwebtocken.service.js";
+import emailService from "./email.service.js";
+
+import ApiError from "../exeptions/api.error.js";
+import UserDTO from "../dto/user.dto.js";
+
 import bcrypt from "bcrypt";
-import uuid from 'uuid';
-import UserDTO from "../dto/user.dto";
-import { getProfile } from "../repositories/profile.repository";
+import { v4 as uuidv4 } from 'uuid';  
+
+
 
 class AuthorisationService {
     async registration (email, password, firstName, lastName) {
         const candidate = await getOneUser({ email });
         if (candidate) {
-            return ApiError.BadRequest('This user alrady created');
+            throw ApiError.BadRequest('This user alrady created');
         }
 
         const hashPassword = await bcrypt.hash(password, 10);
-        const activationLink = uuid.v4();
+        const activationLink = await uuidv4();   
 
-        const newUser = await createUsers(email, hashPassword, activationLink);
-        const userProfile = await createUsersProfiles(firstName, lastName);
+        let newUser = await createUsers(email, hashPassword, activationLink);
+        const userProfile = await createProfile(firstName, lastName);
 
         if (!newUser || !userProfile) {
-            return ApiError.BadRequest('This user does not be created');
+            throw ApiError.BadRequest('This user does not be created');
         }
+
+        user.password = null;
+
+        const sendEmail = await emailService.sendActivationMail(newUser.email, `${process.env.SERVER_VERIFY_LINK }/${activationLink}`);
 
         const payload = new UserDTO(newUser);
         const tocken = jsonwebtockenService.generateTockens({ ...payload });
@@ -31,36 +42,56 @@ class AuthorisationService {
 
     async login (email, password) {
         if (!email || !password) {
-            return ApiError.BadRequest('The fields password or email is required');
+            throw ApiError.BadRequest('The fields password or email is required');
         }
 
         const user = await getOneUser({ email });
-        if (!user) {
-            return ApiError.UnauthorizedError('This user is not defined');
+        if (!user || !user.is_active) {
+            throw ApiError.UnauthorizedError('This user is not defined');
         }
+        
 
         const isUserCheckedPassword = await bcrypt.compareSync(password, user.password);
         if (!isUserCheckedPassword) {
-            return ApiError.UnauthorizedError('Email or password is wrong');
+            throw ApiError.UnauthorizedError('Email or password is wrong');
         }
 
-        const jsonwebtoken = new UserDTO({ ...user });
+        const payload = new UserDTO(user);
+        const jsonwebtocken = jsonwebtockenService.generateTockens({ ...payload })
         return {
-            ...jsonwebtoken
+            ...jsonwebtocken
         }
     }
 
     async profile (_profile) {
         if (!profile) {
-            return ApiError.BadRequest('Parametr ptrofile is required');
+            throw ApiError.BadRequest('Parametr ptrofile is required');
         }
 
         const profile = await getProfile(_profile.id);
         return profile;
     }
 
-    async active (user) {
-        
+    async active (activationLink) {
+        if (!activationLink) {
+            throw ApiError.BadRequest('Parametr activation_link is required');
+        }
+
+        const user = await getOneUser({ activation_link: activationLink });
+        if (user.activation_link !== activationLink) {
+            throw ApiError.BadRequest('These activation data are not correct');
+        }
+
+        if (user.is_active) {
+            throw ApiError.BadRequest('This user has been verified');
+        }
+
+        const verifyUser = await editeUser(user.id, { is_active: true });
+        if (!verifyUser) {
+            throw ApiError.BadRequest('Unexpected verification error');
+        }
+
+        return process.env.CLIENT_VERIFY_LINK;
     }
 }
 

@@ -3,11 +3,11 @@ import ApiError from '../exeptions/api.error.js';
 
 const attributes = { exclude: ['password'] };
 
-const createUsers = async (email, password, active_link) => {
-    const newUser = await UserModel.create({ email, password, is_active: false, active_link });
+const createUsers = async (email, password, activation_link) => {
+    const newUser = await UserModel.create({ email, password, is_active: false, activation_link });
 
     if (!newUser) {
-        return ApiError.BadRequest('The user is not created');
+        throw ApiError.BadRequest('The user is not created');
     }
 
     return newUser;
@@ -30,9 +30,9 @@ const getOneUser = async (where) => {
         return ApiError.BadRequest('Where parameter must not be null or undefined');
     }
 
-    const user = await UserModel.findOne({ where });
+    const user = await UserModel.findOne({ where });  
 
-    if (!user) {
+    if (!user && !where.email) {
         return ApiError.BadRequest('The user is not defined');
     }
 
@@ -56,9 +56,10 @@ const editeUser = async (id, editeData) => {
     });
 
     await user.save();
+    return user;
 }
 
-const updateUser = async (id, data) => {
+const updateUser = async (id, userData) => {
     if (!id || !editeData) {
         return ApiError.BadRequest('Id and editeData parameter must not be null or undefined');
     }
@@ -68,8 +69,8 @@ const updateUser = async (id, data) => {
         return ApiError.BadRequest('User not found');
     }
 
-    await user.update(newUserData);
-    return user;
+    const updatedUser = await user.update(userData);
+    return updatedUser;
 }
 
 const deleteUser = async (id, include=[]) => {
