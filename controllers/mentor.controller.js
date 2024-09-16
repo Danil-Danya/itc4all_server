@@ -1,11 +1,27 @@
-import ApiError from "../exeptions/api.error.js";
+//import ApiError from "../exeptions/api.error.js";
 import mentrosService from "../services/mentros.service.js";
 
 class MentorController {
     async createMentor (req, res, next) {
         try {
-            const { email, first_name, last_name, speciality, experience } = req.body;
-            const newMentor = await mentrosService.create({ email, first_name, last_name, speciality, experience });
+            const email = req.body.email;
+            const first_name = req.body.first_name;
+            const last_name = req.body.last_name;
+            const speciality = req.body.speciality;
+            const experience = req.body.experience;
+
+            const instagram = req.body.instagram;
+            const telegram = req.body.telegram;
+            const gmail = req.body.gmail;
+            const github = req.body.github;
+            const linkedin = req.body.linkedin;
+            
+            const path = req.file ? req.file.filename : null;
+
+            const mentor = { email, first_name, last_name, speciality, experience };
+            const social = { instagram, github, telegram, gmail, linkedin };
+            
+            const newMentor = await mentrosService.createMentor(mentor, social, path);
 
             return res.json(newMentor);
         }
@@ -17,7 +33,7 @@ class MentorController {
     async deleteMentor(req, res, next) {
         try {
             const id = req.params.id;
-            const deletedMentor = await mentrosService.delete(id);
+            const deletedMentor = await mentrosService.deleteMentor(id);
 
             return res.json({ deletedMentor });
         }
@@ -31,7 +47,7 @@ class MentorController {
             const id = req.params.id;
             const data = req.body;
 
-            const editedMentor = await mentrosService.edite(id, data);
+            const editedMentor = await mentrosService.editeMentor(id, data);
             return res.json(editedMentor);
         }
         catch (error) {
@@ -44,7 +60,7 @@ class MentorController {
             const id = req.params.id;
             const data = req.body;
 
-            const updatedMentor = await mentrosService.edite(id, data);
+            const updatedMentor = await mentrosService.updateMentor(id, data);
             return res.json(updatedMentor);
         }
         catch (error) {
@@ -61,13 +77,12 @@ class MentorController {
             const ordering = req.query.oredering;
             const where = req.query.where;
 
-            const orederingType = req.query.oredering_type;
             const whereFields = req.query.whereFields;
 
             const pagination = { page, limit };
-            const filters = { ordering, orederingType, where, whereFields, search };
+            const filters = { ordering, where, whereFields, search };
 
-            const mentors = await mentrosService.getAll(pagination, filters);
+            const mentors = await mentrosService.getAllMentros(pagination, filters);
             return res.json(mentors);
         }
         catch (error) {
@@ -78,7 +93,7 @@ class MentorController {
     async getOneMentor(req, res, next) {
         try {
             const id = req.params.id;
-            const mentor = await mentrosService.getOne(id);
+            const mentor = await mentrosService.getOneMentor(id);
 
             return res.json(mentor);
         }

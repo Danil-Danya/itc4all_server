@@ -16,7 +16,7 @@ const deleteMentor = async (id, include=[]) => {
         return ApiError.BadRequest('The mentor not found');
     }
 
-    const deletedMentor = await MentrosModel.destroy({ where: { id } });
+    const deletedMentor = await mentor.destroy();
     if (deletedMentor) {
         return ApiError.BadRequest('The mentor does not be deleted');
     }
@@ -65,8 +65,8 @@ const getAllMentros = async (pagination, where={}, order={}, include=[]) => {
     return mentors;
 }
 
-const getOneMentor = async (id) => {
-    const mentor = await MentrosModel.findOne({ where: { id } });
+const getOneMentor = async (id, include=[]) => {
+    const mentor = await MentrosModel.findOne({ where: { id }, include });
     if (!mentor) {
         return ApiError.BadRequest('The mentor not found');
     }

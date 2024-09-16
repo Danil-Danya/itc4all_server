@@ -241,7 +241,7 @@
  * /mentors:
  *   post:
  *     summary: Создать нового ментора
- *     description: Создает нового ментора на основе предоставленных данных.
+ *     description: Создает нового ментора на основе предоставленных данных, включая социальные сети и файл изображения.
  *     tags:
  *       - Mentor
  *     security:
@@ -249,7 +249,7 @@
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         multipart/form-data:
  *           schema:
  *             type: object
  *             properties:
@@ -269,6 +269,31 @@
  *               experience:
  *                 type: number
  *                 example: 5
+ *               instagram:
+ *                 type: string
+ *                 format: url
+ *                 example: "https://instagram.com/mentor"
+ *               telegram:
+ *                 type: string
+ *                 format: url
+ *                 example: "https://t.me/mentor"
+ *               gmail:
+ *                 type: string
+ *                 format: email
+ *                 example: "mentor@gmail.com"
+ *               github:
+ *                 type: string
+ *                 format: url
+ *                 example: "https://github.com/mentor"
+ *               linkedin:
+ *                 type: string
+ *                 format: url
+ *                 example: "https://linkedin.com/in/mentor"
+ *               image:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                   format: binary
  *     responses:
  *       200:
  *         description: Успешное создание ментора
@@ -295,6 +320,27 @@
  *                 experience:
  *                   type: number
  *                   example: 5
+ *                 social:
+ *                   type: object
+ *                   properties:
+ *                     instagram:
+ *                       type: string
+ *                       example: "https://instagram.com/mentor"
+ *                     telegram:
+ *                       type: string
+ *                       example: "https://t.me/mentor"
+ *                     gmail:
+ *                       type: string
+ *                       example: "mentor@gmail.com"
+ *                     github:
+ *                       type: string
+ *                       example: "https://github.com/mentor"
+ *                     linkedin:
+ *                       type: string
+ *                       example: "https://linkedin.com/in/mentor"
+ *                 path:
+ *                   type: string
+ *                   example: "/uploads/profile.jpg"
  *       400:
  *         description: Ошибка валидации данных
  *       500:
@@ -635,6 +681,176 @@
  *         description: Ошибка в запросе (неверные параметры)
  *       401:
  *         description: Неавторизован (JWT токен отсутствует или недействителен)
+ *       404:
+ *         description: Ментор не найден
+ *       500:
+ *         description: Внутренняя ошибка сервера
+ */
+
+
+/**
+ * @swagger
+ * /mentors/social/{id}:
+ *   patch:
+ *     summary: Обновить социальные сети ментора
+ *     description: Обновляет информацию о социальных сетях ментора по его уникальному идентификатору.
+ *     tags:
+ *       - Mentor
+ *     security:
+ *       - bearerAuth: []  # Защита JWT для этого эндпоинта
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *           example: 1
+ *         description: Уникальный идентификатор ментора
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               instagram:
+ *                 type: string
+ *                 format: url
+ *                 example: "https://instagram.com/mentor"
+ *                 description: Ссылка на Instagram профайл
+ *               telegram:
+ *                 type: string
+ *                 format: url
+ *                 example: "https://t.me/mentor"
+ *                 description: Ссылка на Telegram профайл
+ *               gmail:
+ *                 type: string
+ *                 format: email
+ *                 example: "mentor@gmail.com"
+ *                 description: Электронная почта
+ *               github:
+ *                 type: string
+ *                 format: url
+ *                 example: "https://github.com/mentor"
+ *                 description: Ссылка на GitHub профайл
+ *               linkedin:
+ *                 type: string
+ *                 format: url
+ *                 example: "https://linkedin.com/in/mentor"
+ *                 description: Ссылка на LinkedIn профайл
+ *     responses:
+ *       200:
+ *         description: Успешное обновление информации о социальных сетях ментора
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: integer
+ *                   example: 1
+ *                 instagram:
+ *                   type: string
+ *                   example: "https://instagram.com/mentor"
+ *                 telegram:
+ *                   type: string
+ *                   example: "https://t.me/mentor"
+ *                 gmail:
+ *                   type: string
+ *                   example: "mentor@gmail.com"
+ *                 github:
+ *                   type: string
+ *                   example: "https://github.com/mentor"
+ *                 linkedin:
+ *                   type: string
+ *                   example: "https://linkedin.com/in/mentor"
+ *       400:
+ *         description: Ошибка валидации данных
+ *       404:
+ *         description: Ментор не найден
+ *       500:
+ *         description: Внутренняя ошибка сервера
+ */
+
+
+/**
+ * @swagger
+ * /mentors/social/{id}:
+ *   put:
+ *     summary: Обновить социальные сети ментора
+ *     description: Обновляет информацию о социальных сетях ментора по его уникальному идентификатору.
+ *     tags:
+ *       - Mentor
+ *     security:
+ *       - bearerAuth: []  # Защита JWT для этого эндпоинта
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *           example: 1
+ *         description: Уникальный идентификатор ментора
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               instagram:
+ *                 type: string
+ *                 format: url
+ *                 example: "https://instagram.com/mentor"
+ *                 description: Ссылка на Instagram профайл
+ *               telegram:
+ *                 type: string
+ *                 format: url
+ *                 example: "https://t.me/mentor"
+ *                 description: Ссылка на Telegram профайл
+ *               gmail:
+ *                 type: string
+ *                 format: email
+ *                 example: "mentor@gmail.com"
+ *                 description: Электронная почта
+ *               github:
+ *                 type: string
+ *                 format: url
+ *                 example: "https://github.com/mentor"
+ *                 description: Ссылка на GitHub профайл
+ *               linkedin:
+ *                 type: string
+ *                 format: url
+ *                 example: "https://linkedin.com/in/mentor"
+ *                 description: Ссылка на LinkedIn профайл
+ *     responses:
+ *       200:
+ *         description: Успешное обновление информации о социальных сетях ментора
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: integer
+ *                   example: 1
+ *                 instagram:
+ *                   type: string
+ *                   example: "https://instagram.com/mentor"
+ *                 telegram:
+ *                   type: string
+ *                   example: "https://t.me/mentor"
+ *                 gmail:
+ *                   type: string
+ *                   example: "mentor@gmail.com"
+ *                 github:
+ *                   type: string
+ *                   example: "https://github.com/mentor"
+ *                 linkedin:
+ *                   type: string
+ *                   example: "https://linkedin.com/in/mentor"
+ *       400:
+ *         description: Ошибка валидации данных
  *       404:
  *         description: Ментор не найден
  *       500:

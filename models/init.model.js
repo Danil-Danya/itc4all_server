@@ -20,7 +20,7 @@ UserModel.hasOne(ProfileModel, { as: 'profile', foreignKey: 'profile_id' });
 UserModel.hasOne(AvararModel, { as: 'avatar', foreignKey: 'avatar_id' });
 
 MentorsModel.hasOne(MentrosPreviewsModel, { as: 'mentors_previews', foreignKey: 'mentors_previevs_id' });
-MentorsModel.hasMany(MentrosSocialModel, { as: 'mentros_social', foreignKey: 'mentors_social_id' });
+MentorsModel.hasOne(MentrosSocialModel, { as: 'mentros_social', foreignKey: 'mentors_social_id' });
 
 CourseModel.belongsToMany(CourseCategoriesModel, { through: 'courses_categories_branch', as: 'coureses_categories' });
 CourseCategoriesModel.belongsToMany(CourseModel, { through: 'courses_categories_branch', as: 'coureses' });
