@@ -6,7 +6,7 @@ const CoursesCategories = sequelize.define('courses_categories', {
     id: { 
         type: DataTypes.INTEGER, 
         allowNull: false, 
-        utoIncrement: true, 
+        autoIncrement: true, 
         primaryKey: true, 
         unique: true 
     },

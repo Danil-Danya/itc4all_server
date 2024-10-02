@@ -12,7 +12,6 @@ import bcrypt from "bcrypt";
 import { v4 as uuidv4 } from 'uuid';  
 
 
-
 class AuthorisationService {
     async registration (email, password, firstName, lastName) {
         const candidate = await getOneUser({ email });
@@ -50,7 +49,6 @@ class AuthorisationService {
             throw ApiError.UnauthorizedError('This user is not defined');
         }
         
-
         const isUserCheckedPassword = await bcrypt.compareSync(password, user.password);
         if (!isUserCheckedPassword) {
             throw ApiError.UnauthorizedError('Email or password is wrong');
@@ -64,8 +62,8 @@ class AuthorisationService {
     }
 
     async profile (_profile) {
-        if (!profile) {
-            throw ApiError.BadRequest('Parametr ptrofile is required');
+        if (!_profile) {
+            throw ApiError.BadRequest('Parametr profile is required');
         }
 
         const profile = await getProfile(_profile.id);

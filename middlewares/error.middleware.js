@@ -2,6 +2,11 @@ import ApiError from '../exeptions/api.error.js';
 
 export default (err, req, res, next) => {
     if (err instanceof ApiError) {
+        console.log(err.status);
+        
+        if (err.status > 600 || err.status < 0) {
+            return res.status(500).json({ err, message: err.message });
+        }
         return res.status(err.status).json({ message: err.message, errors: err.erros });
     }
 

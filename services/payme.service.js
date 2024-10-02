@@ -1,10 +1,10 @@
 import ApiError from "../exeptions/api.error.js";
 
-// import { getOneUser } from '../repositories/user.repository.js';
-// import { getOneCourse } from "../repositories/course.repository.js";
+import { getOneUser } from '../repositories/user.repository.js';
+import { getOneCourse } from "../repositories/course.repository.js";
 // import { getOneZoom } from "../repositories/zoom.repository.js";
 
-// import { createTransaction, getOneTransaction, editeTransaction } from "../repositories/transactions.repository.js";
+import { createTransaction, getOneTransaction, editeTransaction } from "../repositories/transactions.repository.js";
 
 class PaymeService {
     async CheckPerformTransaction (params, id) {

@@ -24,7 +24,7 @@ const getMentorPreview = async (mentors_previevs_id) => {
 }
 
 const editeMentorPreview = async (mentors_previevs_id, data) => {
-    const mentorPreview = await MentorPreviewModel.findOne({ where: mentors_previevs_id });
+    const mentorPreview = await MentorPreviewModel.findOne({ where: { mentors_previevs_id } });
     if (!mentorPreview) {
         throw ApiError.BadRequest('This preview not found');
     }
@@ -35,7 +35,7 @@ const editeMentorPreview = async (mentors_previevs_id, data) => {
         }
     });
 
-    const editedMentorPreview = await mentor.save();
+    const editedMentorPreview = await mentorPreview.save();
     return editedMentorPreview;
 }
 

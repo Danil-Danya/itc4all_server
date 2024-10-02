@@ -858,7 +858,149 @@
  */
 
 
+/**
+ * @swagger
+ * /request:
+ *   post:
+ *     summary: Отправить новый запрос
+ *     description: Создает новый запрос с информацией о пользователе, такой как номер телефона, имя и сообщение.
+ *     tags:
+ *       - Request
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               phone:
+ *                 type: string
+ *                 example: "+123456789"
+ *                 description: Номер телефона пользователя
+ *               name:
+ *                 type: string
+ *                 example: "John Doe"
+ *                 description: Имя пользователя
+ *               message:
+ *                 type: string
+ *                 example: "I would like more information."
+ *                 description: Сообщение от пользователя
+ *     responses:
+ *       200:
+ *         description: Успешное создание нового запроса
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: integer
+ *                   example: 1
+ *                 phone:
+ *                   type: string
+ *                   example: "+123456789"
+ *                 name:
+ *                   type: string
+ *                   example: "John Doe"
+ *                 message:
+ *                   type: string
+ *                   example: "I would like more information."
+ *                 createdAt:
+ *                   type: string
+ *                   format: date-time
+ *                   example: "2023-09-23T14:23:00Z"
+ *       400:
+ *         description: Неверные параметры запроса
+ *       500:
+ *         description: Внутренняя ошибка сервера
+ */
+
+/**
+ * @swagger
+ * /request/{id}:
+ *   get:
+ *     summary: Получить данные запроса по ID
+ *     description: Возвращает информацию о запросе по уникальному идентификатору.
+ *     tags:
+ *       - Request
+ *     security:
+ *       - bearerAuth: []  # Защита JWT для этого эндпоинта
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *           example: 1
+ *         description: Уникальный идентификатор запроса
+ *     responses:
+ *       200:
+ *         description: Успешное получение данных запроса
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: integer
+ *                   example: 1
+ *                 phone:
+ *                   type: string
+ *                   example: "+123456789"
+ *                 name:
+ *                   type: string
+ *                   example: "John Doe"
+ *                 message:
+ *                   type: string
+ *                   example: "I would like more information."
+ *                 createdAt:
+ *                   type: string
+ *                   format: date-time
+ *                   example: "2023-09-23T14:23:00Z"
+ *       400:
+ *         description: Неверные параметры запроса
+ *       404:
+ *         description: Запрос не найден
+ *       500:
+ *         description: Внутренняя ошибка сервера
+ */
 
+/**
+ * @swagger
+ * /request/{id}:
+ *   delete:
+ *     summary: Удалить запрос по ID
+ *     description: Удаляет запрос по уникальному идентификатору.
+ *     tags:
+ *       - Request
+ *     security:
+ *       - bearerAuth: []  # Защита JWT для этого эндпоинта
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *           example: 1
+ *         description: Уникальный идентификатор запроса
+ *     responses:
+ *       200:
+ *         description: Успешное удаление запроса
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "This request has been deleted"
+ *       400:
+ *         description: Неверные параметры запроса
+ *       404:
+ *         description: Запрос не найден
+ *       500:
+ *         description: Внутренняя ошибка сервера
+ */
 
 
 
@@ -910,22 +1052,1304 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+/**
+ * @swagger
+ * /courses:
+ *   post:
+ *     summary: Создать новый курс
+ *     description: Создает новый курс с указанными параметрами, включая имя, наставника, цену, полную цену, категории и загруженный файл (например, изображение обложки курса).
+ *     tags:
+ *       - Course
+ *     security:
+ *       - bearerAuth: []  # Защита JWT для этого эндпоинта
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:  # Используем для загрузки файла
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 example: "Web Development"
+ *                 description: Название курса
+ *               mentor:
+ *                 type: string
+ *                 example: "John Doe"
+ *                 description: Имя наставника курса
+ *               price:
+ *                 type: number
+ *                 example: 100
+ *                 description: Стоимость курса
+ *               full_price:
+ *                 type: number
+ *                 example: 200
+ *                 description: Полная цена курса (без скидок)
+ *               file:
+ *                 type: string
+ *                 format: binary
+ *                 description: Изображение обложки курса
+ *     parameters:
+ *       - in: query
+ *         name: categories
+ *         schema:
+ *           type: string
+ *           example: "Development, Programming"
+ *         description: Категории курса, разделенные запятыми
+ *     responses:
+ *       200:
+ *         description: Успешное создание курса
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: integer
+ *                   example: 1
+ *                 name:
+ *                   type: string
+ *                   example: "Web Development"
+ *                 mentor:
+ *                   type: string
+ *                   example: "John Doe"
+ *                 price:
+ *                   type: number
+ *                   example: 100
+ *                 full_price:
+ *                   type: number
+ *                   example: 200
+ *                 lesson_count:
+ *                   type: integer
+ *                   example: 0
+ *                 categories:
+ *                   type: string
+ *                   example: "Development, Programming"
+ *                 image:
+ *                   type: string
+ *                   example: "course-image.jpg"
+ *       400:
+ *         description: Ошибка валидации данных
+ *       500:
+ *         description: Внутренняя ошибка сервера
+ */
+
+
+/**
+ * @swagger
+ * /courses:
+ *   delete:
+ *     summary: Удалить курс
+ *     description: Удаляет курс по указанному ID.
+ *     tags:
+ *       - Course
+ *     security:
+ *       - bearerAuth: []  # Защита JWT для этого эндпоинта
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               id:
+ *                 type: integer
+ *                 example: 1
+ *                 description: Уникальный идентификатор курса
+ *     responses:
+ *       200:
+ *         description: Успешное удаление курса
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "This course has been deleted"
+ *       400:
+ *         description: Неверные параметры запроса
+ *       404:
+ *         description: Курс не найден
+ *       500:
+ *         description: Внутренняя ошибка сервера
+ */
+
+
+/**
+ * @swagger
+ * /courses:
+ *   put:
+ *     summary: Редактировать курс
+ *     description: Редактирует курс по указанному ID.
+ *     tags:
+ *       - Course
+ *     security:
+ *       - bearerAuth: []  # Защита JWT для этого эндпоинта
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               id:
+ *                 type: integer
+ *                 example: 1
+ *                 description: Уникальный идентификатор курса
+ *     responses:
+ *       200:
+ *         description: Успешное редактирование курса
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: integer
+ *                   example: 1
+ *                 name:
+ *                   type: string
+ *                   example: "Web Development"
+ *                 mentor:
+ *                   type: string
+ *                   example: "John Doe"
+ *                 price:
+ *                   type: number
+ *                   example: 300
+ *                 full_price:
+ *                   type: number
+ *                   example: 500
+ *                 lesson_count:
+ *                   type: integer
+ *                   example: 12
+ *       400:
+ *         description: Неверные параметры запроса
+ *       404:
+ *         description: Курс не найден
+ *       500:
+ *         description: Внутренняя ошибка сервера
+ */
+
+
+/**
+ * @swagger
+ * /courses:
+ *   patch:
+ *     summary: Обновить курс
+ *     description: Обновляет существующий курс по указанному ID.
+ *     tags:
+ *       - Course
+ *     security:
+ *       - bearerAuth: []  # Защита JWT для этого эндпоинта
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               id:
+ *                 type: integer
+ *                 example: 1
+ *                 description: Уникальный идентификатор курса
+ *     responses:
+ *       200:
+ *         description: Успешное обновление курса
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: integer
+ *                   example: 1
+ *                 name:
+ *                   type: string
+ *                   example: "Advanced JavaScript"
+ *                 mentor:
+ *                   type: string
+ *                   example: "Jane Smith"
+ *                 price:
+ *                   type: number
+ *                   example: 400
+ *                 full_price:
+ *                   type: number
+ *                   example: 600
+ *                 lesson_count:
+ *                   type: integer
+ *                   example: 15
+ *       400:
+ *         description: Неверные параметры запроса
+ *       404:
+ *         description: Курс не найден
+ *       500:
+ *         description: Внутренняя ошибка сервера
+ */
+
+
+/**
+ * @swagger
+ * /courses:
+ *   get:
+ *     summary: Получить список всех курсов
+ *     description: Возвращает список курсов с поддержкой фильтрации, сортировки и пагинации.
+ *     tags:
+ *       - Course
+ *     security:
+ *       - bearerAuth: []  # Защита JWT для этого эндпоинта
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           example: 1
+ *         description: Номер страницы для пагинации
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           example: 10
+ *         description: Количество курсов на страницу
+ *       - in: query
+ *         name: where
+ *         schema:
+ *           type: string
+ *           example: "mentor"
+ *         description: Поле для фильтрации
+ *       - in: query
+ *         name: whereField
+ *         schema:
+ *           type: string
+ *           example: "John Doe"
+ *         description: Значение для фильтрации по указанному полю
+ *       - in: query
+ *         name: ordering
+ *         schema:
+ *           type: string
+ *           example: "price"
+ *         description: Поле для сортировки
+ *       - in: query
+ *         name: orderingType
+ *         schema:
+ *           type: string
+ *           enum: [ASC, DESC]
+ *           example: "ASC"
+ *         description: Тип сортировки (по возрастанию или убыванию)
+ *       - in: query
+ *         name: include
+ *         schema:
+ *           type: string
+ *           example: "categories"
+ *         description: Включить связанные модели (например, категории)
+ *     responses:
+ *       200:
+ *         description: Успешное получение списка курсов
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 total:
+ *                   type: integer
+ *                   example: 100
+ *                 page:
+ *                   type: integer
+ *                   example: 1
+ *                 limit:
+ *                   type: integer
+ *                   example: 10
+ *                 courses:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       id:
+ *                         type: integer
+ *                         example: 1
+ *                       name:
+ *                         type: string
+ *                         example: "Advanced JavaScript"
+ *                       mentor:
+ *                         type: string
+ *                         example: "Jane Smith"
+ *                       price:
+ *                         type: number
+ *                         example: 400
+ *                       full_price:
+ *                         type: number
+ *                         example: 600
+ *                       lesson_count:
+ *                         type: integer
+ *                         example: 15
+ *       400:
+ *         description: Неверные параметры запроса
+ *       500:
+ *         description: Внутренняя ошибка сервера
+ */
+
+
+/**
+ * @swagger
+ * /courses/one:
+ *   get:
+ *     summary: Получить один курс по имени
+ *     description: Возвращает информацию о курсе, используя фильтрацию по имени курса.
+ *     tags:
+ *       - Course
+ *     security:
+ *       - bearerAuth: []  # Защита JWT для этого эндпоинта
+ *     parameters:
+ *       - in: query
+ *         name: where
+ *         schema:
+ *           type: string
+ *           example: "Advanced JavaScript"
+ *         description: Имя курса для поиска
+ *     responses:
+ *       200:
+ *         description: Успешное получение курса
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: integer
+ *                   example: 1
+ *                 name:
+ *                   type: string
+ *                   example: "Advanced JavaScript"
+ *                 mentor:
+ *                   type: string
+ *                   example: "Jane Smith"
+ *                 price:
+ *                   type: number
+ *                   example: 400
+ *                 full_price:
+ *                   type: number
+ *                   example: 600
+ *                 lesson_count:
+ *                   type: integer
+ *                   example: 15
+ *       400:
+ *         description: Неверные параметры запроса
+ *       404:
+ *         description: Курс не найден
+ *       500:
+ *         description: Внутренняя ошибка сервера
+ */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/**
+ * @swagger
+ * /course-category:
+ *   post:
+ *     summary: Создать новую категорию курса
+ *     description: Создает новую категорию для курсов на основе названия, предоставленного в запросе.
+ *     tags:
+ *       - Course Categories
+ *     security:
+ *       - bearerAuth: []  # Защита JWT для этого эндпоинта
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               category_name:
+ *                 type: string
+ *                 example: "Programming"
+ *                 description: Название категории курса
+ *     responses:
+ *       200:
+ *         description: Категория успешно создана
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: integer
+ *                   example: 1
+ *                   description: Уникальный идентификатор категории
+ *                 category_name:
+ *                   type: string
+ *                   example: "Programming"
+ *                   description: Название созданной категории курса
+ *       400:
+ *         description: Неверные параметры запроса
+ *       500:
+ *         description: Внутренняя ошибка сервера
+ */
+
+
+/**
+ * @swagger
+ * /course-category:
+ *   get:
+ *     summary: Получить информацию о категории курса
+ *     description: Возвращает информацию о категории курса на основе её названия, переданного в запросе.
+ *     tags:
+ *       - Course Categories
+ *     security:
+ *       - bearerAuth: []  # Защита JWT для этого эндпоинта
+ *     parameters:
+ *       - name: category_name
+ *         in: query
+ *         required: true
+ *         schema:
+ *           type: string
+ *           example: "Programming"
+ *         description: Название категории курса для поиска
+ *     responses:
+ *       200:
+ *         description: Информация о категории успешно получена
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: integer
+ *                   example: 1
+ *                   description: Уникальный идентификатор категории
+ *                 category_name:
+ *                   type: string
+ *                   example: "Programming"
+ *                   description: Название категории курса
+ *       400:
+ *         description: Неверные параметры запроса
+ *       404:
+ *         description: Категория не найдена
+ *       500:
+ *         description: Внутренняя ошибка сервера
+ */
+
+
+/**
+ * @swagger
+ * /course-categories:
+ *   get:
+ *     summary: Получить список всех категорий курсов
+ *     description: Возвращает список всех категорий курсов.
+ *     tags:
+ *       - Course Categories
+ *     security:
+ *       - bearerAuth: []  # Защита JWT для этого эндпоинта
+ *     responses:
+ *       200:
+ *         description: Список категорий курсов успешно получен
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: integer
+ *                     example: 1
+ *                     description: Уникальный идентификатор категории
+ *                   category_name:
+ *                     type: string
+ *                     example: "Programming"
+ *                     description: Название категории курса
+ *       500:
+ *         description: Внутренняя ошибка сервера
+ */
+
+
+/**
+ * @swagger
+ * /course-category/{id}:
+ *   delete:
+ *     summary: Удалить категорию курса
+ *     description: Удаляет категорию курса по её ID.
+ *     tags:
+ *       - Course Categories
+ *     security:
+ *       - bearerAuth: []  # Защита JWT для этого эндпоинта
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: Уникальный идентификатор категории курса
+ *     responses:
+ *       200:
+ *         description: Категория успешно удалена
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "This category has been deleted"
+ *       400:
+ *         description: Неверный ID категории курса
+ *       500:
+ *         description: Внутренняя ошибка сервера
+ */
+
+
+/**
+ * @swagger
+ * /course-category/{id}:
+ *   put:
+ *     summary: Обновить категорию курса
+ *     description: Обновляет название категории курса по её ID.
+ *     tags:
+ *       - Course Categories
+ *     security:
+ *       - bearerAuth: []  # Защита JWT для этого эндпоинта
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: Уникальный идентификатор категории курса
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               category_name:
+ *                 type: string
+ *                 example: "Web Development"
+ *                 description: Новое название категории курса
+ *     responses:
+ *       200:
+ *         description: Категория успешно обновлена
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: integer
+ *                   example: 1
+ *                 category_name:
+ *                   type: string
+ *                   example: "Web Development"
+ *       400:
+ *         description: Неверные параметры запроса
+ *       404:
+ *         description: Категория не найдена
+ *       500:
+ *         description: Внутренняя ошибка сервера
+ */
+
+
+/**
+ * @swagger
+ * /course-category/{id}:
+ *   patch:
+ *     summary: Редактировать категорию курса
+ *     description: Редактирует название категории курса по её ID.
+ *     tags:
+ *       - Course Categories
+ *     security:
+ *       - bearerAuth: []  # Защита JWT для этого эндпоинта
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: Уникальный идентификатор категории курса
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               category_name:
+ *                 type: string
+ *                 example: "Software Engineering"
+ *                 description: Новое название категории курса
+ *     responses:
+ *       200:
+ *         description: Категория успешно отредактирована
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: integer
+ *                   example: 1
+ *                 category_name:
+ *                   type: string
+ *                   example: "Software Engineering"
+ *       400:
+ *         description: Неверные параметры запроса
+ *       404:
+ *         description: Категория не найдена
+ *       500:
+ *         description: Внутренняя ошибка сервера
+ */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/**
+ * @swagger
+ * /transactions/{id}:
+ *   get:
+ *     summary: Получить одну транзакцию по ID
+ *     description: Возвращает информацию о транзакции по её идентификатору.
+ *     tags:
+ *       - Transactions
+ *     security:
+ *       - bearerAuth: []  # Защита JWT для этого эндпоинта
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Идентификатор транзакции
+ *     responses:
+ *       200:
+ *         description: Успешное получение транзакции
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: string
+ *                   example: "123456"
+ *                 amount:
+ *                   type: number
+ *                   example: 1000
+ *                 status:
+ *                   type: string
+ *                   example: "completed"
+ *                 createdAt:
+ *                   type: string
+ *                   format: date-time
+ *                   example: "2024-09-20T15:34:22Z"
+ *       400:
+ *         description: Неверные параметры запроса
+ *       404:
+ *         description: Транзакция не найдена
+ *       500:
+ *         description: Внутренняя ошибка сервера
+ */
+
+
+/**
+ * @swagger
+ * /transactions:
+ *   get:
+ *     summary: Получить список транзакций
+ *     description: Возвращает список транзакций с возможностью фильтрации, сортировки и пагинации.
+ *     tags:
+ *       - Transactions
+ *     security:
+ *       - bearerAuth: []  # Защита JWT для этого эндпоинта
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *         description: Номер страницы для пагинации
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *         description: Количество транзакций на странице
+ *       - in: query
+ *         name: where
+ *         schema:
+ *           type: string
+ *         description: Значение для фильтрации по полю
+ *       - in: query
+ *         name: whereField
+ *         schema:
+ *           type: string
+ *         description: Поле, по которому производится фильтрация
+ *       - in: query
+ *         name: ordering
+ *         schema:
+ *           type: string
+ *         description: Поле для сортировки
+ *       - in: query
+ *         name: orderingType
+ *         schema:
+ *           type: string
+ *           enum: [asc, desc]
+ *         description: Тип сортировки (asc или desc)
+ *     responses:
+ *       200:
+ *         description: Успешное получение списка транзакций
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: string
+ *                     example: "123456"
+ *                   amount:
+ *                     type: number
+ *                     example: 1000
+ *                   status:
+ *                     type: string
+ *                     example: "completed"
+ *                   createdAt:
+ *                     type: string
+ *                     format: date-time
+ *                     example: "2024-09-20T15:34:22Z"
+ *       400:
+ *         description: Неверные параметры запроса
+ *       500:
+ *         description: Внутренняя ошибка сервера
+ */
+
+
+/**
+ * @swagger
+ * /transactions/{id}:
+ *   put:
+ *     summary: Обновить транзакцию
+ *     description: Обновляет информацию о транзакции по ее идентификатору.
+ *     tags:
+ *       - Transactions
+ *     security:
+ *       - bearerAuth: []  # Защита JWT для этого эндпоинта
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Идентификатор транзакции
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               user_first_name:
+ *                 type: string
+ *                 example: "John"
+ *               user_last_name:
+ *                 type: string
+ *                 example: "Doe"
+ *               product_name:
+ *                 type: string
+ *                 example: "Product A"
+ *               operator_unical_id:
+ *                 type: string
+ *                 example: "OP-123456"
+ *               payment_method:
+ *                 type: string
+ *                 example: "PAYME"
+ *               createdAt:
+ *                 type: string
+ *                 format: date-time
+ *                 example: "2024-09-23T15:00:00Z"
+ *               state:
+ *                 type: integer
+ *                 example: 1
+ *               amount:
+ *                 type: number
+ *                 example: 1000
+ *     responses:
+ *       200:
+ *         description: Транзакция успешно обновлена
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: string
+ *                   example: "123456"
+ *                 user_first_name:
+ *                   type: string
+ *                   example: "John"
+ *                 user_last_name:
+ *                   type: string
+ *                   example: "Doe"
+ *                 product_name:
+ *                   type: string
+ *                   example: "Product A"
+ *                 operator_unical_id:
+ *                   type: string
+ *                   example: "OP-123456"
+ *                 payment_method:
+ *                   type: string
+ *                   example: "PAYME"
+ *                 state:
+ *                   type: integer
+ *                   example: 1
+ *                 amount:
+ *                   type: number
+ *                   example: 1000
+ *       400:
+ *         description: Неверные параметры запроса
+ *       500:
+ *         description: Внутренняя ошибка сервера
+ */
+
+
+/**
+ * @swagger
+ * /transactions/{id}:
+ *   patch:
+ *     summary: Редактировать транзакцию
+ *     description: Редактирует существующую транзакцию по ее идентификатору.
+ *     tags:
+ *       - Transactions
+ *     security:
+ *       - bearerAuth: []  # Защита JWT для этого эндпоинта
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Идентификатор транзакции
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               user_first_name:
+ *                 type: string
+ *                 example: "John"
+ *               user_last_name:
+ *                 type: string
+ *                 example: "Doe"
+ *               product_name:
+ *                 type: string
+ *                 example: "Product A"
+ *               operator_unical_id:
+ *                 type: string
+ *                 example: "OP-123456"
+ *               payment_method:
+ *                 type: string
+ *                 example: "PAYME"
+ *               createdAt:
+ *                 type: string
+ *                 format: date-time
+ *                 example: "2024-09-23T15:00:00Z"
+ *               state:
+ *                 type: integer
+ *                 example: 1
+ *               amount:
+ *                 type: number
+ *                 example: 1000
+ *     responses:
+ *       200:
+ *         description: Транзакция успешно отредактирована
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: string
+ *                   example: "123456"
+ *                 user_first_name:
+ *                   type: string
+ *                   example: "John"
+ *                 user_last_name:
+ *                   type: string
+ *                   example: "Doe"
+ *                 product_name:
+ *                   type: string
+ *                   example: "Product A"
+ *                 operator_unical_id:
+ *                   type: string
+ *                   example: "OP-123456"
+ *                 payment_method:
+ *                   type: string
+ *                   example: "PAYME"
+ *                 state:
+ *                   type: integer
+ *                   example: 1
+ *                 amount:
+ *                   type: number
+ *                   example: 1000
+ *       400:
+ *         description: Неверные параметры запроса
+ *       500:
+ *         description: Внутренняя ошибка сервера
+ */
+
+
+/**
+ * @swagger
+ * /transactions/{id}:
+ *   delete:
+ *     summary: Удалить транзакцию
+ *     description: Удаляет транзакцию по ее идентификатору.
+ *     tags:
+ *       - Transactions
+ *     security:
+ *       - bearerAuth: []  # Защита JWT для этого эндпоинта
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Идентификатор транзакции для удаления
+ *     responses:
+ *       200:
+ *         description: Транзакция успешно удалена
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Transaction successfully deleted"
+ *       400:
+ *         description: Неверные параметры запроса
+ *       404:
+ *         description: Транзакция не найдена
+ *       500:
+ *         description: Внутренняя ошибка сервера
+ */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/**
+ * @swagger
+ * /zoom-sessions:
+ *   post:
+ *     summary: Создать новую Zoom сессию
+ *     description: Создает новую Zoom сессию для пользователя.
+ *     tags:
+ *       - Zoom Sessions
+ *     security:
+ *       - bearerAuth: []  # Защита JWT для этого эндпоинта
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               start_time:
+ *                 type: string
+ *                 format: date-time
+ *                 example: "2024-09-30T14:30:00Z"
+ *                 description: Время начала сессии
+ *               duration:
+ *                 type: number
+ *                 example: 60
+ *                 description: Продолжительность сессии в минутах
+ *               mentor:
+ *                 type: string
+ *                 example: "John Doe"
+ *                 description: Имя ментора, проводящего сессию
+ *     responses:
+ *       200:
+ *         description: Сессия успешно создана
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: string
+ *                   example: "abcd1234"
+ *                   description: Идентификатор сессии
+ *                 start_time:
+ *                   type: string
+ *                   format: date-time
+ *                   example: "2024-09-30T14:30:00Z"
+ *                 duration:
+ *                   type: number
+ *                   example: 60
+ *                 mentor:
+ *                   type: string
+ *                   example: "John Doe"
+ *       400:
+ *         description: Неверные параметры запроса
+ *       500:
+ *         description: Внутренняя ошибка сервера
+ */
+
+
+/**
+ * @swagger
+ * /zoom-sessions/auth:
+ *   get:
+ *     summary: Аутентификация в Zoom API
+ *     description: Аутентифицирует пользователя через Zoom и получает токен доступа.
+ *     tags:
+ *       - Zoom Sessions
+ *     security:
+ *       - bearerAuth: []  # Защита JWT для этого эндпоинта
+ *     parameters:
+ *       - in: query
+ *         name: code
+ *         required: true
+ *         schema:
+ *           type: string
+ *           example: "abcd1234"
+ *         description: Код авторизации, возвращаемый после авторизации Zoom
+ *     responses:
+ *       200:
+ *         description: Токен доступа успешно получен
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 token:
+ *                   type: string
+ *                   example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+ *                   description: Токен доступа к Zoom API
+ *       400:
+ *         description: Неверный или отсутствующий код авторизации
+ *       500:
+ *         description: Внутренняя ошибка сервера
+ */
+
+
+/**
+ * @swagger
+ * /zoom-sdk/signature:
+ *   get:
+ *     summary: Генерация подписи для Zoom SDK
+ *     description: Генерирует подпись, необходимую для аутентификации в Zoom SDK, используя номер встречи.
+ *     tags:
+ *       - Zoom SDK
+ *     security:
+ *       - bearerAuth: []  # Защита JWT для этого эндпоинта
+ *     parameters:
+ *       - in: query
+ *         name: meeting_number
+ *         required: true
+ *         schema:
+ *           type: string
+ *           example: "123456789"
+ *         description: Номер встречи Zoom, для которой требуется сгенерировать подпись
+ *     responses:
+ *       200:
+ *         description: Успешно сгенерированная подпись
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 signature:
+ *                   type: string
+ *                   example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+ *                   description: Подпись для Zoom SDK
+ *       400:
+ *         description: Неверные параметры запроса (например, отсутствующий номер встречи)
+ *       500:
+ *         description: Внутренняя ошибка сервера
+ */
+
+
+
+/**
+ * @swagger
+ * /zoom-sdk/zak-token:
+ *   get:
+ *     summary: Получение токена ZAK для Zoom SDK
+ *     description: Генерирует токен ZAK, необходимый для аутентификации в Zoom SDK, используя номер встречи.
+ *     tags:
+ *       - Zoom SDK
+ *     security:
+ *       - bearerAuth: []  # Защита JWT для этого эндпоинта
+ *     responses:
+ *       200:
+ *         description: Успешно полученный токен ZAK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 ZAKToken:
+ *                   type: string
+ *                   example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+ *                   description: Токен ZAK для Zoom SDK
+ *       400:
+ *         description: Неверные параметры запроса (например, отсутствующий номер встречи)
+ *       500:
+ *         description: Внутренняя ошибка сервера
+ */
 
 
 
@@ -996,12 +2420,12 @@
 
 /**
  * @swagger
- * /transactions/payme:
+ * /trasactions/payment/payme:
  *   post:
  *     summary: Обработка платежей через Payme API
  *     description: Обрабатывает различные запросы, такие как создание, выполнение, отмена транзакций, и получение выписки через Payme API.
  *     tags:
- *       - Transactions
+ *       - Payment
  *     security:
  *       - bearerAuth: []  # Защита JWT для этого эндпоинта
  *     requestBody:

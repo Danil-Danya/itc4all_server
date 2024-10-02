@@ -59,14 +59,14 @@ class MentorService {
 
     async getAllMentros (pagination, filters, whereClause={}) {
         const { page, limit } = pagination;
-        const { ordering, whereField, search } = filters;
+        const { ordering, whereField, search, orderingType } = filters;
 
         if (whereField && where !== undefined) {
             whereClause[whereField] = where;
         }
 
         const offset = page * limit - limit;
-        const order = ordering ? [[ordering, 'ASC']] : [];
+        const order = ordering ? [[ordering, orderingType ? orderingType : 'ACS']] : [];
 
         if (search) {
             whereClause.first_name = { [Op.like]: `%${search}%` };

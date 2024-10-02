@@ -18,7 +18,7 @@ const paymeCheckToken = (req, res, next) => {
     }
     catch (error) {
         console.log(error);
-        return res.status(401).message('Unxpected payment error');
+        return res.status(401).json({ message: 'Unxpected payment error' });
     }
 }
 

@@ -1,10 +1,16 @@
 import { Router } from "express";
 
-import mernchat from '../middlewares/paymeToken.middleware.js';
+import jwt from '../middlewares/jwt.middleware.js';
 import transactionController from "../controllers/transaction.controller.js";
 
 const router = Router();
 
-router.post('trasactions/payme', mernchat, transactionController.trasactionsPayme);
+router.get('transactions/:id', jwt, transactionController.getOneTransaction);
+router.get('transactions/', jwt, transactionController.getAllTransaction);
+
+router.delete('transactions/:id', jwt, transactionController.deleteTransaction);
+
+router.put('transactions/:id', jwt, transactionController.updateTransaction);
+router.patch('transactions/:id', jwt, transactionController.editeTransaction);
 
 export default router;

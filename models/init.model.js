@@ -15,6 +15,7 @@ import CoursePreviewModel from './coursePreview.model.js';
 import VideosModel from './videos.model.js';
 import Transactions from './transactions.model.js';
 import IsBuedCourse from './courseBuyed.model.js';
+import RequestsModel from './requests.model.js';
 
 UserModel.hasOne(ProfileModel, { as: 'profile', foreignKey: 'profile_id' });
 UserModel.hasOne(AvararModel, { as: 'avatar', foreignKey: 'avatar_id' });
@@ -49,5 +50,6 @@ export default {
     CourseListModel,
     CoursePreviewModel,
     VideosModel,
-    Transactions
+    Transactions,
+    RequestsModel
 }
