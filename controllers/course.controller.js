@@ -12,11 +12,11 @@ class CourseController {
 
             const categories = req.query.categories;
 
-            const path = req.file ? req.file.filename : null;
+            const path = req.file.filename;
+            console.log(req.file.filename);
+            
 
             const courseData = { name, mentor, price, full_price, lesson_count };
-            console.log(req.body);
-            
 
             const newCourse = await courseService.createCourse(courseData, path, categories);
             return res.json(newCourse);
@@ -86,8 +86,8 @@ class CourseController {
 
     async getOneCourse (req, res, next) {
         try {
-            const { where } = req.query.where; // если я захочу сделать поиск по имени курса
-            const course = await courseService.getOneCourse({ where });
+            const { id } = req.params; // если я захочу сделать поиск по имени курса
+            const course = await courseService.getOneCourse(id);
 
             return res.json(course);
         }

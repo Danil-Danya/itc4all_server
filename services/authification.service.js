@@ -23,13 +23,13 @@ class AuthorisationService {
         const activationLink = await uuidv4();   
 
         let newUser = await createUsers(email, hashPassword, activationLink);
-        const userProfile = await createProfile(firstName, lastName);
+        const userProfile = await createProfile(firstName, lastName, newUser.id);
 
         if (!newUser || !userProfile) {
             throw ApiError.BadRequest('This user does not be created');
         }
 
-        user.password = null;
+        newUser.password = null;
 
         const sendEmail = await emailService.sendActivationMail(newUser.email, `${process.env.SERVER_VERIFY_LINK }/${activationLink}`);
 

@@ -31,7 +31,9 @@ swagger(app)
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
 app.use('/emails', express.static(path.join(__dirname, 'static', 'email', 'images')));
+app.use('/images', express.static(path.join(__dirname, 'uploads', 'images')));
 
 //app.get('*', (req, res) => )
 

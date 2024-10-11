@@ -9,43 +9,38 @@ import { createTransaction, getOneTransaction, editeTransaction } from "../repos
 class PaymeService {
     async CheckPerformTransaction (params, id) {
         const { user_email, product_type, product_id } = params.account;
-        const { amount } = Math.floor(params.amount / 100);
+        const amount = Math.floor(params.amount / 100);
 
-        try {
-            if (!product_id || !user_email) {
-                throw ApiError.MernchatError(-31050, 'The parametr user_email and product_id is required');
-            }
-    
-            if (!product_type) {
-                throw ApiError.MernchatError(-31050, 'The parametr product_type is required');
-            }
-    
-            if (!amount) {
-                throw ApiError.MernchatError(-31001, 'The parametr amount is required');
-            }
-    
-            const user = await getOneUser({ email: user_email });
-            if (!user) {
-                throw ApiError.MernchatError(-31050, 'This user is not defined');
-            }
-    
-            const product = product_type === 'COURSE' ? await getOneCourse(product_id) : product_type === 'ZOOM_SESSION' ? await getOneZoom(product_id) : null;
-            if (!product) {
-                throw ApiError.MernchatError(-31050, 'The product is not defined');
-            }
-    
-            if (product.price !== amount) {
-                throw ApiError.MernchatError(-31001, 'The quantity parameter does not match the price of the found product');
-            }
-
-            return {
-                'result': {
-                    "allow": true
-                }
-            }
+        if (!product_id || !user_email) {
+            throw ApiError.MernchatError(-31050, 'The parametr user_email and product_id is required');
         }
-        catch (error) {
-            throw ApiError.MernchatError(-31001, 'Unexpected error');
+
+        if (!product_type) {
+            throw ApiError.MernchatError(-31050, 'The parametr product_type is required');
+        }
+
+        if (!amount) {
+            throw ApiError.MernchatError(-31001, 'The parametr amount is required');
+        }
+
+        const user = await getOneUser({ email: user_email });
+        if (!user) {
+            throw ApiError.MernchatError(-31050, 'This user is not defined');
+        }
+
+        const product = product_type === 'COURSE' ? await getOneCourse(product_id) : product_type === 'ZOOM_SESSION' ? await getOneZoom(product_id) : null;
+        if (!product) {
+            throw ApiError.MernchatError(-31050, 'The product is not defined');
+        }
+
+        if (product.price !== amount) {
+            throw ApiError.MernchatError(-31001, 'The quantity parameter does not match the price of the found product');
+        }
+
+        return {
+            'result': {
+                "allow": true
+            }
         }
     }
 

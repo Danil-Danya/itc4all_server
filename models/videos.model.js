@@ -22,7 +22,7 @@ const Videos = sequelize.define('videos', {
     },
 
     time: {
-        type: DataTypes.TIME,
+        type: DataTypes.STRING,
         allowNull: false,
     },
 })

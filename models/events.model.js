@@ -10,6 +10,16 @@ const Events = sequelize.define('events', {
         unique: true 
     },
 
+    title: {
+        type: DataTypes.TEXT,
+        allowNull: false
+    },
+
+    preview: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+
     content: {
         type: DataTypes.JSON,
         allowNull: false, 

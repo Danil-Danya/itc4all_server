@@ -30,6 +30,11 @@ const Mentros = sequelize.define('mentors', {
         allowNull: false, 
     },
 
+    biography: {
+        type: DataTypes.TEXT,
+        allowNull: false, 
+    },
+
     experience: {
         type: DataTypes.STRING,
         allowNull: false, 

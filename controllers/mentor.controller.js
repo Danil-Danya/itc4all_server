@@ -9,6 +9,7 @@ class MentorController {
             const last_name = req.body.last_name;
             const speciality = req.body.speciality;
             const experience = req.body.experience;
+            const biography = req.body.biography;
 
             const instagram = req.body.instagram;
             const telegram = req.body.telegram;
@@ -18,7 +19,7 @@ class MentorController {
             
             const path = req.file ? req.file.filename : null;
 
-            const mentor = { email, first_name, last_name, speciality, experience };
+            const mentor = { email, first_name, last_name, speciality, biography, experience };
             const social = { instagram, github, telegram, gmail, linkedin };
             
             const newMentor = await mentrosService.createMentor(mentor, social, path);

@@ -3,7 +3,9 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const bot = new TelegramBot(process.env.TELEGRAM_TOKEN, { polling: true });
+//process.env.TELEGRAM_TOKEN
+
+const bot = new TelegramBot('sdfsdfsdf', { polling: true });
 
 bot.onText(/\/start/, (msg) => {
     const chatId = msg.chat.id;

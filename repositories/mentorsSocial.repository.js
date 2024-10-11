@@ -7,7 +7,7 @@ const createMentorSocial = async (mentors_social_id, data) => {
         fullData = { mentors_social_id, ...data };
     }
 
-    const newMentor = MentorSocialModel.create(fullData);
+    const newMentor = await MentorSocialModel.create(fullData);
     if (!newMentor) {
         throw ApiError.BadRequest('This mentor does not be created');
     }
@@ -16,7 +16,7 @@ const createMentorSocial = async (mentors_social_id, data) => {
 }
 
 const getMentorSocial = async (id) => {
-    const mentorSocials = MentorSocialModel.findOne({ where: { mentors_social_id: id } });
+    const mentorSocials = await MentorSocialModel.findOne({ where: { mentors_social_id: id } });
     if (!mentorSocials) {
         throw ApiError.BadRequest('This mentor not found');
     }
@@ -25,7 +25,7 @@ const getMentorSocial = async (id) => {
 }
 
 const editeMentorSocial = async (id, data) => {
-    const mentorSocials = MentorSocialModel.findOne({ where: { mentors_social_id: id } });
+    const mentorSocials = await MentorSocialModel.findOne({ where: { mentors_social_id: id } });
     if (!mentorSocials) {
         throw ApiError.BadRequest('This mentor not found');
     }
@@ -41,7 +41,7 @@ const editeMentorSocial = async (id, data) => {
 }
 
 const updateMentorSocial = async (id, data) => {
-    const mentorSocials = MentorSocialModel.findOne({ where: { mentors_social_id: id } });
+    const mentorSocials = await MentorSocialModel.findOne({ where: { mentors_social_id: id } });
     if (!mentorSocials) {
         throw ApiError.BadRequest('This mentor not found');
     }

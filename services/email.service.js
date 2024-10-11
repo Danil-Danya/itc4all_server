@@ -1,5 +1,7 @@
 import nodemailer from "nodemailer";
 import generateVerifyTemplate from '../static/email/templates/verify.templates.js';
+import generateZoomMentorTemplate from "../static/email/templates/zoom.mentor.templates.js";
+import generateZoomUserTemplate from "../static/email/templates/zoom.user.templates.js";
 
 class EmailService {
     constructor () {
@@ -23,17 +25,20 @@ class EmailService {
         })
     }
 
-    async sendZoomSessionLink (to, link) {
+    async sendZoomSessionLinkToUser (to, link) {
         await this.transporter.sendMail({
             from: process.env.SMTP_USER,
-            subject: 'Verify account ACT4ALL',
-            html: `
-                <div>
-                    <h1>Your zoom session link:</h1>
-                    <a href="${link}">${link}</a>
-                </div>
-            `,
-            text: '',
+            subject: 'Join Zoom Session ACT4ALL',
+            html: generateZoomMentorTemplate(link),
+            to,
+        })
+    }
+
+    async sendZoomSessionLinkToMentor (to, link) {
+        await this.transporter.sendMail({
+            from: process.env.SMTP_USER,
+            subject: 'Start Zoom Session ACT4ALL',
+            html: generateZoomMentorTemplate(link),
             to,
         })
     }

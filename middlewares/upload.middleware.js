@@ -1,13 +1,18 @@
 import multer from 'multer';
 import path from 'path';
 
+import { fileURLToPath } from 'url';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 const getUploadPath = (mimeType) => {
     if (mimeType.startsWith('image/')) {
-        return 'uploads/images/';
+        return path.join(__dirname, '../uploads/images/');  
     }
     if (mimeType.startsWith('video/')) {
-        return 'uploads/videos/';
+        return path.join(__dirname, '../uploads/videos/');  
     }
+    console.error('Unsupported file type:', mimeType); 
     throw new Error('Unsupported file type');
 };
 

@@ -68,6 +68,7 @@ const createZoomSession = async (session) => {
         type: 2,
         start_time: session.startTime,
         duration: session.duration,
+        password: session.password,
         settings: {
             password: session.password,
             approval_type: 0,

@@ -5,7 +5,7 @@ export default (err, req, res, next) => {
         console.log(err.status);
         
         if (err.status > 600 || err.status < 0) {
-            return res.status(500).json({ err, message: err.message });
+            return res.status(200).json({ error: { code: err.status, message: err.message } });
         }
         return res.status(err.status).json({ message: err.message, errors: err.erros });
     }

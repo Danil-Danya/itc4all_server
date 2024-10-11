@@ -3,12 +3,12 @@ import ProfileModel from '../models/profile.model.js';
 
 import ApiError from '../exeptions/api.error.js';
 
-const createProfile = async (first_name, last_name, user_id) => {
+const createProfile = async (first_name, last_name, profile_id) => {
     if (!first_name || !last_name) {
         return ApiError.BadRequest('Field first_name and last_name is required');
     }
 
-    const newProfile = await ProfileModel.create({first_name, last_name, user_id});
+    const newProfile = await ProfileModel.create({ first_name, last_name, profile_id });
     if (!newProfile) {
         return ApiError.BadRequest('Profile could not be created');
     }

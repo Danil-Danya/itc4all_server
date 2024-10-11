@@ -16,6 +16,7 @@ import VideosModel from './videos.model.js';
 import Transactions from './transactions.model.js';
 import IsBuedCourse from './courseBuyed.model.js';
 import RequestsModel from './requests.model.js';
+import ZoomSessionsModel from './zoomSessions.model.js';
 
 UserModel.hasOne(ProfileModel, { as: 'profile', foreignKey: 'profile_id' });
 UserModel.hasOne(AvararModel, { as: 'avatar', foreignKey: 'avatar_id' });
@@ -33,6 +34,12 @@ UserModel.belongsToMany(CourseModel, { through: IsBuedCourse, foreignKey: 'userI
 CourseModel.belongsToMany(UserModel, { through: IsBuedCourse, foreignKey: 'courseId' });
 
 VideosModel.belongsTo(CourseModel, { as: 'course', foreignKey: 'course_id' });
+
+UserModel.hasMany(ZoomSessionsModel, { foreignKey: 'user_id', as: 'zoom_sessions' });
+ZoomSessionsModel.belongsTo(UserModel, { foreignKey: 'user_id', as: 'user' });
+
+MentorsModel.hasMany(ZoomSessionsModel, { foreignKey: 'mentor_id', as: 'zoom_sessions' });
+ZoomSessionsModel.belongsTo(MentorsModel, { foreignKey: 'mentor_id', as: 'menror' });
 
 sequelize.sync();
 

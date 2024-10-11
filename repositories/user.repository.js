@@ -25,12 +25,13 @@ const getAllUsers = async (pagination, where={}, include=[]) => {
     return users;
 }
 
-const getOneUser = async (where) => {
+const getOneUser = async (where, include=[]) => {
     if (!where) {
         return ApiError.BadRequest('Where parameter must not be null or undefined');
     }
-
-    const user = await UserModel.findOne({ where });  
+    console.log(include);
+    
+    const user = await UserModel.findOne({ where, include });  
 
     if (!user && !where.email) {
         return ApiError.BadRequest('The user is not defined');

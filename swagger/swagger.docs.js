@@ -289,6 +289,10 @@
  *                 type: string
  *                 format: url
  *                 example: "https://linkedin.com/in/mentor"
+ *               biography:
+ *                 type: string
+ *                 description: Краткая биография ментора
+ *                 example: "Опытный разработчик с более чем 5-летним стажем в разработке программного обеспечения."
  *               image:
  *                 type: array
  *                 items:
@@ -320,6 +324,9 @@
  *                 experience:
  *                   type: number
  *                   example: 5
+ *                 biography:
+ *                   type: string
+ *                   example: "Опытный разработчик с более чем 5-летним стажем в разработке программного обеспечения."
  *                 social:
  *                   type: object
  *                   properties:
@@ -346,6 +353,7 @@
  *       500:
  *         description: Внутренняя ошибка сервера
  */
+
 
 
 /**
@@ -2194,7 +2202,7 @@
  * /zoom-sessions:
  *   post:
  *     summary: Создать новую Zoom сессию
- *     description: Создает новую Zoom сессию для пользователя.
+ *     description: Создаёт новую сессию Zoom на основе указанных данных, включая время начала, длительность и ID ментора.
  *     tags:
  *       - Zoom Sessions
  *     security:
@@ -2209,43 +2217,204 @@
  *               start_time:
  *                 type: string
  *                 format: date-time
- *                 example: "2024-09-30T14:30:00Z"
- *                 description: Время начала сессии
+ *                 example: "2024-10-15T14:30:00Z"
+ *                 description: Время начала сессии Zoom
  *               duration:
- *                 type: number
+ *                 type: integer
  *                 example: 60
- *                 description: Продолжительность сессии в минутах
- *               mentor:
- *                 type: string
- *                 example: "John Doe"
- *                 description: Имя ментора, проводящего сессию
+ *                 description: Длительность сессии в минутах
+ *               mentor_id:
+ *                 type: integer
+ *                 example: 2
+ *                 description: Уникальный идентификатор ментора, проводящего сессию
  *     responses:
  *       200:
- *         description: Сессия успешно создана
+ *         description: Сессия Zoom успешно создана
  *         content:
  *           application/json:
  *             schema:
  *               type: object
  *               properties:
  *                 id:
- *                   type: string
- *                   example: "abcd1234"
- *                   description: Идентификатор сессии
+ *                   type: integer
+ *                   example: 1
  *                 start_time:
  *                   type: string
  *                   format: date-time
- *                   example: "2024-09-30T14:30:00Z"
+ *                   example: "2024-10-15T14:30:00Z"
  *                 duration:
- *                   type: number
+ *                   type: integer
  *                   example: 60
- *                 mentor:
- *                   type: string
- *                   example: "John Doe"
+ *                 mentor_id:
+ *                   type: integer
+ *                   example: 2
  *       400:
- *         description: Неверные параметры запроса
+ *         description: Неверные данные запроса
  *       500:
  *         description: Внутренняя ошибка сервера
  */
+
+
+
+/**
+ * @swagger
+ * /zoom-sessions/{id}:
+ *   delete:
+ *     summary: Удалить Zoom сессию
+ *     description: Удаляет существующую сессию Zoom по её ID.
+ *     tags:
+ *       - Zoom Sessions
+ *     security:
+ *       - bearerAuth: []  # Защита JWT для этого эндпоинта
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         description: Уникальный идентификатор сессии Zoom
+ *         schema:
+ *           type: integer
+ *           example: 1
+ *     responses:
+ *       200:
+ *         description: Сессия Zoom успешно удалена
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Zoom session has been deleted"
+ *       404:
+ *         description: Сессия не найдена
+ *       500:
+ *         description: Внутренняя ошибка сервера
+ */
+
+
+/**
+ * @swagger
+ * /zoom-sessions:
+ *   get:
+ *     summary: Получить все Zoom сессии
+ *     description: Возвращает список всех Zoom сессий с возможностью пагинации.
+ *     tags:
+ *       - Zoom Sessions
+ *     security:
+ *       - bearerAuth: []  # Защита JWT для этого эндпоинта
+ *     parameters:
+ *       - name: page
+ *         in: query
+ *         required: false
+ *         description: Номер страницы для пагинации
+ *         schema:
+ *           type: integer
+ *           example: 1
+ *       - name: limit
+ *         in: query
+ *         required: false
+ *         description: Количество сессий на странице
+ *         schema:
+ *           type: integer
+ *           example: 10
+ *     responses:
+ *       200:
+ *         description: Успешное получение списка Zoom сессий
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: integer
+ *                     example: 1
+ *                   start_time:
+ *                     type: string
+ *                     format: date-time
+ *                     example: "2024-10-03T10:00:00Z"
+ *                   duration:
+ *                     type: integer
+ *                     example: 60
+ *                   mentor_id:
+ *                     type: integer
+ *                     example: 3
+ *                   createdAt:
+ *                     type: string
+ *                     format: date-time
+ *                     example: "2024-10-01T10:00:00Z"
+ *                   updatedAt:
+ *                     type: string
+ *                     format: date-time
+ *                     example: "2024-10-01T10:30:00Z"
+ *       500:
+ *         description: Внутренняя ошибка сервера
+ */
+
+
+
+/**
+ * @swagger
+ * /zoom-sessions/{id}:
+ *   get:
+ *     summary: Получить одну Zoom сессию
+ *     description: Возвращает информацию о конкретной Zoom сессии по её ID.
+ *     tags:
+ *       - Zoom Sessions
+ *     security:
+ *       - bearerAuth: []  # Защита JWT для этого эндпоинта
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         description: ID Zoom сессии
+ *         schema:
+ *           type: integer
+ *           example: 1
+ *     responses:
+ *       200:
+ *         description: Успешное получение информации о Zoom сессии
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: integer
+ *                   example: 1
+ *                 start_time:
+ *                   type: string
+ *                   format: date-time
+ *                   example: "2024-10-03T10:00:00Z"
+ *                 duration:
+ *                   type: integer
+ *                   example: 60
+ *                 mentor_id:
+ *                   type: integer
+ *                   example: 3
+ *                 createdAt:
+ *                   type: string
+ *                   format: date-time
+ *                   example: "2024-10-01T10:00:00Z"
+ *                 updatedAt:
+ *                   type: string
+ *                   format: date-time
+ *                   example: "2024-10-01T10:30:00Z"
+ *       404:
+ *         description: Zoom сессия не найдена
+ *       500:
+ *         description: Внутренняя ошибка сервера
+ */
+
+
+
+
+
+
+
+
+
 
 
 /**
@@ -2379,6 +2548,658 @@
 
 
 
+/**
+ * @swagger
+ * /events:
+ *   post:
+ *     summary: Создать новое событие
+ *     description: Создает новое событие с заголовком, контентом и изображениями.
+ *     tags:
+ *       - Events
+ *     security:
+ *       - bearerAuth: []  # Защита JWT для этого эндпоинта
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               title:
+ *                 type: string
+ *                 example: "Технологическое событие"
+ *               content:
+ *                 type: object
+ *                 properties:
+ *                   title:
+ *                     type: string
+ *                     example: "Заголовок контента"
+ *                   preview:
+ *                     type: string
+ *                     example: "/image/path"
+ *                   views:
+ *                     type: integer
+ *                     example: 0
+ *                   content:
+ *                     type: array
+ *                     items:
+ *                       type: object
+ *                       properties:
+ *                         subtitle:
+ *                           type: string
+ *                           example: "Раздел 1"
+ *                         description:
+ *                           type: string
+ *                           example: "Описание первого раздела."
+ *                         list:
+ *                           type: string
+ *                           example: "Элемент 1, Элемент 2"
+ *                         image:
+ *                           type: string
+ *                           example: "/image/path"
+ *               images:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                   format: binary
+ *     responses:
+ *       200:
+ *         description: Успешное создание события
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: integer
+ *                   example: 1
+ *                 title:
+ *                   type: string
+ *                   example: "Технологическое событие"
+ *                 content:
+ *                   type: object
+ *                   properties:
+ *                     title:
+ *                       type: string
+ *                       example: "Заголовок контента"
+ *                     preview:
+ *                       type: string
+ *                       example: "/image/path"
+ *                     views:
+ *                       type: integer
+ *                       example: 0
+ *                     content:
+ *                       type: array
+ *                       items:
+ *                         type: object
+ *                         properties:
+ *                           subtitle:
+ *                             type: string
+ *                             example: "Раздел 1"
+ *                           description:
+ *                             type: string
+ *                             example: "Описание первого раздела."
+ *                           list:
+ *                             type: string
+ *                             example: "Элемент 1, Элемент 2"
+ *                           image:
+ *                             type: string
+ *                             example: "/image/path"
+ *       400:
+ *         description: Ошибка валидации данных
+ *       500:
+ *         description: Внутренняя ошибка сервера
+ */
+
+
+/**
+ * @swagger
+ * /events/{id}:
+ *   delete:
+ *     summary: Удалить событие
+ *     description: Удаляет событие по его идентификатору.
+ *     tags:
+ *       - Events
+ *     security:
+ *       - bearerAuth: []  
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: Идентификатор события для удаления
+ *         schema:
+ *           type: integer
+ *           example: 1
+ *     responses:
+ *       200:
+ *         description: Успешное удаление события
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Событие успешно удалено"
+ *       404:
+ *         description: Событие не найдено
+ *       500:
+ *         description: Внутренняя ошибка сервера
+ */
+
+
+
+/**
+ * @swagger
+ * /events/{id}:
+ *   put:
+ *     summary: Обновить событие
+ *     description: Обновляет информацию о событии, включая изображения и содержимое.
+ *     tags:
+ *       - Events
+ *     security:
+ *       - bearerAuth: []  # Защита JWT для этого эндпоинта
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: Идентификатор события для обновления
+ *         schema:
+ *           type: integer
+ *           example: 1
+ *       - in: query
+ *         name: changePreview
+ *         required: false
+ *         description: Флаг для изменения превью изображения
+ *         schema:
+ *           type: boolean
+ *           example: true
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               title:
+ *                 type: string
+ *                 description: Название события
+ *                 example: "Новая конференция"
+ *               content:
+ *                 type: object
+ *                 description: Содержимое события в формате JSON
+ *                 example:
+ *                   title: "Название"
+ *                   preview: "/image/path"
+ *                   views: 0
+ *                   content:
+ *                     - subtitle: "Подзаголовок 1"
+ *                       description: "Описание 1"
+ *                       list: "Список пунктов 1"
+ *                       image: "/images/1.jpg"
+ *                     - subtitle: "Подзаголовок 2"
+ *                       description: "Описание 2"
+ *                       list: "Список пунктов 2"
+ *                       image: "/images/2.jpg"
+ *               views:
+ *                 type: integer
+ *                 description: Количество просмотров
+ *                 example: 100
+ *               images:
+ *                 type: array
+ *                 description: Массив изображений
+ *                 items:
+ *                   type: string
+ *                   format: binary
+ *     responses:
+ *       200:
+ *         description: Успешное обновление события
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Событие успешно обновлено"
+ *       404:
+ *         description: Событие не найдено
+ *       500:
+ *         description: Внутренняя ошибка сервера
+ */
+
+
+
+/**
+ * @swagger
+ * /events/{id}:
+ *   patch:
+ *     summary: Редактировать событие
+ *     description: Изменение данных события, включая изображения, контент и количество просмотров.
+ *     tags:
+ *       - Events
+ *     security:
+ *       - bearerAuth: []  # Защита JWT для этого эндпоинта
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: Идентификатор события для редактирования
+ *         schema:
+ *           type: integer
+ *           example: 1
+ *       - in: query
+ *         name: changePreview
+ *         required: false
+ *         description: Флаг для изменения превью изображения
+ *         schema:
+ *           type: boolean
+ *           example: true
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               title:
+ *                 type: string
+ *                 description: Название события
+ *                 example: "Конференция 2024"
+ *               content:
+ *                 type: object
+ *                 description: Содержимое события в формате JSON
+ *                 example:
+ *                   title: "Конференция"
+ *                   preview: "/image/path"
+ *                   views: 0
+ *                   content:
+ *                     - subtitle: "Секция 1"
+ *                       description: "Описание секции 1"
+ *                       list: "Список задач 1"
+ *                       image: "/images/section1.jpg"
+ *                     - subtitle: "Секция 2"
+ *                       description: "Описание секции 2"
+ *                       list: "Список задач 2"
+ *                       image: "/images/section2.jpg"
+ *               views:
+ *                 type: integer
+ *                 description: Количество просмотров
+ *                 example: 500
+ *               images:
+ *                 type: array
+ *                 description: Массив изображений
+ *                 items:
+ *                   type: string
+ *                   format: binary
+ *     responses:
+ *       200:
+ *         description: Успешное редактирование события
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Событие успешно отредактировано"
+ *       404:
+ *         description: Событие не найдено
+ *       500:
+ *         description: Внутренняя ошибка сервера
+ */
+
+
+
+
+/**
+ * @swagger
+ * /event:
+ *   get:
+ *     summary: Получить одно событие
+ *     description: Получить информацию о событии по идентификатору или имени. Если указаны оба параметра, поиск будет выполнен по идентификатору.
+ *     tags:
+ *       - Events
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: id
+ *         required: false
+ *         description: Идентификатор события
+ *         schema:
+ *           type: integer
+ *           example: 1
+ *       - in: query
+ *         name: name
+ *         required: false
+ *         description: Название события
+ *         schema:
+ *           type: string
+ *           example: "Конференция 2024"
+ *     responses:
+ *       200:
+ *         description: Успешное получение события
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: integer
+ *                   example: 1
+ *                 name:
+ *                   type: string
+ *                   example: "Конференция 2024"
+ *                 content:
+ *                   type: object
+ *                   description: Содержимое события в формате JSON
+ *                   example:
+ *                     title: "Конференция"
+ *                     preview: "/image/path"
+ *                     views: 500
+ *                     content:
+ *                       - subtitle: "Секция 1"
+ *                         description: "Описание секции 1"
+ *                         list: "Список задач 1"
+ *                         image: "/images/section1.jpg"
+ *                       - subtitle: "Секция 2"
+ *                         description: "Описание секции 2"
+ *                         list: "Список задач 2"
+ *                         image: "/images/section2.jpg"
+ *       404:
+ *         description: Событие не найдено
+ *       500:
+ *         description: Внутренняя ошибка сервера
+ */
+
+
+
+
+/**
+ * @swagger
+ * /events:
+ *   get:
+ *     summary: Получить список событий
+ *     description: Получить все события с фильтрацией, пагинацией, сортировкой и поиском.
+ *     tags:
+ *       - Events
+ *     security:
+ *       - bearerAuth: []  
+ *     parameters:
+ *       - in: query
+ *         name: limit
+ *         required: false
+ *         description: Количество событий на странице (пагинация)
+ *         schema:
+ *           type: integer
+ *           example: 10
+ *       - in: query
+ *         name: page
+ *         required: false
+ *         description: Номер страницы для пагинации
+ *         schema:
+ *           type: integer
+ *           example: 0
+ *       - in: query
+ *         name: where
+ *         required: false
+ *         description: Условие фильтрации
+ *         schema:
+ *           type: string
+ *           example: "active"
+ *       - in: query
+ *         name: whereField
+ *         required: false
+ *         description: Поле для применения фильтра
+ *         schema:
+ *           type: string
+ *           example: "status"
+ *       - in: query
+ *         name: ordering
+ *         required: false
+ *         description: Поле для сортировки
+ *         schema:
+ *           type: string
+ *           example: "createdAt"
+ *       - in: query
+ *         name: orderingType
+ *         required: false
+ *         description: Тип сортировки (asc/desc)
+ *         schema:
+ *           type: string
+ *           example: "asc"
+ *       - in: query
+ *         name: search
+ *         required: false
+ *         description: Поисковый запрос
+ *         schema:
+ *           type: string
+ *           example: "Конференция"
+ *       - in: query
+ *         name: execlude
+ *         required: false
+ *         description: Исключить определенные события (например, черновики)
+ *         schema:
+ *           type: boolean
+ *           example: true
+ *     responses:
+ *       200:
+ *         description: Успешное получение списка событий
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: integer
+ *                     example: 1
+ *                   title:
+ *                     type: string
+ *                     example: "Конференция 2024"
+ *                   content:
+ *                     type: object
+ *                     description: Контент события в формате JSON
+ *                     example:
+ *                       title: "Конференция"
+ *                       preview: "/image/path"
+ *                       views: 500
+ *                       content:
+ *                         - subtitle: "Секция 1"
+ *                           description: "Описание секции 1"
+ *                           list: "Список задач 1"
+ *                           image: "/images/section1.jpg"
+ *                         - subtitle: "Секция 2"
+ *                           description: "Описание секции 2"
+ *                           list: "Список задач 2"
+ *                           image: "/images/section2.jpg"
+ *       404:
+ *         description: События не найдены
+ *       500:
+ *         description: Внутренняя ошибка сервера
+ */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/**
+ * @swagger
+ * /videos/{course_id}:
+ *   post:
+ *     summary: Создать видео для курса
+ *     description: Создает новое видео, связанное с указанным курсом, и загружает видеофайл.
+ *     tags:
+ *       - Videos
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: course_id
+ *         required: true
+ *         description: Идентификатор курса, к которому будет добавлено видео
+ *         schema:
+ *           type: integer
+ *           example: 1
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 description: Название видео
+ *                 example: "Введение в программирование"
+ *               file:
+ *                 type: string
+ *                 format: binary
+ *                 description: Видео файл для загрузки (должен быть в формате mp4 или другом поддерживаемом формате)
+ *     responses:
+ *       201:
+ *         description: Видео успешно создано
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: integer
+ *                   example: 1
+ *                 name:
+ *                   type: string
+ *                   example: "Введение в программирование"
+ *                 path:
+ *                   type: string
+ *                   example: "/videos/video1.mp4"
+ *                 time:
+ *                   type: string
+ *                   example: "10:00"
+ *                 course_id:
+ *                   type: integer
+ *                   example: 1
+ *       400:
+ *         description: Неверные данные запроса
+ *       404:
+ *         description: Курс не найден
+ *       500:
+ *         description: Внутренняя ошибка сервера
+ */
+
+
+
+
+/**
+ * @swagger
+ * /videos/{id}:
+ *   get:
+ *     summary: Получить видео по идентификатору
+ *     description: Получает видеофайл по указанному идентификатору.
+ *     tags:
+ *       - Videos
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: Идентификатор видео
+ *         schema:
+ *           type: integer
+ *           example: 1
+ *     responses:
+ *       200:
+ *         description: Успешное получение видео
+ *         content:
+ *           application/octet-stream:
+ *             schema:
+ *               type: string
+ *               format: binary
+ *       404:
+ *         description: Видео не найдено
+ *       500:
+ *         description: Внутренняя ошибка сервера
+ */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -2427,7 +3248,7 @@
  *     tags:
  *       - Payment
  *     security:
- *       - bearerAuth: []  # Защита JWT для этого эндпоинта
+ *       - bearerAuth: []  
  *     requestBody:
  *       required: true
  *       content:

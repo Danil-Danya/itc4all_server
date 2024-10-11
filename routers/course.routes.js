@@ -14,7 +14,7 @@ router.get('/courses/:id', CourseController.getOneCourse, error);
 router.get('/course-category', CourseCategoriesController.getOneCourseCategory);
 router.get('/course-categories', CourseCategoriesController.getAllCourseCategory);
 
-router.post('/courses', jwt, upload.single('image'), CourseController.createCourse, error);
+router.post('/courses', jwt, upload.single('file'), CourseController.createCourse, error);
 router.post('/course-category', jwt, CourseCategoriesController.createCourseCategory);
 
 router.delete('/courses', jwt, CourseController.deleteCourse, error);

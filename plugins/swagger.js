@@ -13,6 +13,9 @@ const options = {
             {
                 url: "http://localhost:5000/server-api/",
             },
+            {
+                url: "http://185.170.196.41:5000/server-api/",
+            },
         ],
         components: {
             securitySchemes: {

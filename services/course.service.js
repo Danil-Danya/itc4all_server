@@ -14,12 +14,11 @@ import {
     getOneCourse
 } from "../repositories/course.repository.js";
 
-//import { createCoursePreview } from "../repositories/couresePreview.repository.js";
+import { createCoursesPreview, updateCoursesPreview } from "../repositories/coursePreview.repository.js";
 
 class CourseService {
     constructor () {
-        //{ model: CoursePreviewModel, as: 'course_preview' }
-        this.include = [];
+        this.include = [{ model: CoursePreviewModel, as: 'course_preview' }];
     }
 
     async createCourse (data, path, categories) {
@@ -29,12 +28,12 @@ class CourseService {
 
         const createdCourse = await createCourse(data, categories);
 
-        const { id } = createdCourse.id; 
-        const createdCoursePreview = await createCoursePreview(id, path);
+        const { id } = createdCourse; 
+        const createdCoursePreview = await createCoursesPreview(id, path);
         
         return {
             createdCourse,
-            //createdCoursePreview
+            createdCoursePreview
         }
     }
 
@@ -54,6 +53,15 @@ class CourseService {
     }
 
     async getOneCourse (id) {
+        const videosInclude = { model: VideoModel, as: 'videos' };
+        const courseCategoriesInclude = {
+            model: CoursesCategoriesModel, as: 'coureses_categories',
+            attributes: { exclude: ['id'] },
+            through: { attributes: [] }
+        };
+
+        this.include.push(courseCategoriesInclude, videosInclude);
+
         const course = await getOneCourse(id, this.include);
         return course;
     }
@@ -75,14 +83,14 @@ class CourseService {
         }
 
         if (include) {
-            //const videosInclude = { model: VideoModel, as: 'course' };
+            const videosInclude = { model: VideoModel, as: 'videos' };
             //const courseListInclude = { model: CourseListModel, as: 'course_list' };
             const courseCategoriesInclude = { model: CoursesCategoriesModel, as: 'coureses_categories', 
                 attributes: { exclude: ['id'] },
                 through: { attributes: [] }
             };
 
-            this.include.push(courseCategoriesInclude);
+            this.include.push(courseCategoriesInclude, videosInclude);
         }
 
         const courses = await getAllCourse({ limit, offset }, whereClause, order, this.include);

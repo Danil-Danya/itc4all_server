@@ -7,9 +7,9 @@ class ZoomSessionsController {
 
             const startTime = req.body.start_time;
             const duration = req.body.duration;
-            const mentor = req.body.mentor;
-
-            const session = { startTime, duration, mentor };
+            const mentorId = req.body.mentor_id;
+            
+            const session = { startTime, duration, mentorId };
 
             const newZommSession = await zoomSessionsService.createZoomSessions(user, session);
 
@@ -22,7 +22,10 @@ class ZoomSessionsController {
 
     async deleteZoomSessions(req, res, next) {
         try {
+            const { id } = req.params;
+            const deletedZoomSession = await zoomSessionsService.deleteZoomSession(id);
 
+            return res.json(deletedZoomSession);
         }
         catch (error) {
             next(error);
@@ -31,7 +34,11 @@ class ZoomSessionsController {
 
     async getAllZoomSessions(req, res, next) {
         try {
+            const page = req.query.page || 1;
+            const limit = req.query.limit || 10;
 
+            const sessions = await zoomSessionsService.getAllZoomSessions({ page, limit });
+            return res.json(sessions);
         }
         catch (error) {
             next(error);
@@ -40,7 +47,10 @@ class ZoomSessionsController {
 
     async getOneZoomSessions(req, res, next) {
         try {
+            const { id } = req.params;
+            const session = await zoomSessionsService.getOneZoomSession(id);
 
+            return res.json(session);
         }
         catch (error) {
             next(error);
