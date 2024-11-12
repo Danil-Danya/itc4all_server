@@ -19,6 +19,13 @@ const getOneRequest = async (id) => {
     return request
 }
 
+const getAllRequests = async (pagination) => {
+    const { limit, offset } = pagination;
+
+    const requests = await RequestsModel.findAndCountAll({ limit, offset });
+    return requests;
+}
+
 const deleteRequest = async (id) => {
     const request = await RequestsModel.findOne({ where: { id } });
     if (!request) {
@@ -36,5 +43,6 @@ const deleteRequest = async (id) => {
 export {
     createRequest,
     getOneRequest,
+    getAllRequests,
     deleteRequest
 }

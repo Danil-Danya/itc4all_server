@@ -25,6 +25,19 @@ class RequestController {
         }
     }
 
+    async getAllRequests (req, res, next) {
+        try {
+            const page = req.query.page || 1;
+            const limit = req.query.limit || 10;
+
+            const requests = await requestService.getAllRequests({ page, limit });
+            return res.json(requests);
+        }
+        catch (error) {
+            next(error)
+        }
+    }
+
     async deleteRequest (req, res, next) {
         try {
             const id = req.params.id;

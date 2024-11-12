@@ -234,6 +234,614 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/**
+ * @swagger
+ * /users/{id}:
+ *   get:
+ *     summary: Получить информацию о пользователе
+ *     description: Возвращает информацию о пользователе по идентификатору.
+ *     tags:
+ *       - Users
+ *     security:
+ *       - bearerAuth: []  # Защита JWT для этого эндпоинта
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *           example: 1
+ *         description: ID пользователя
+ *     responses:
+ *       200:
+ *         description: Успешное получение информации о пользователе
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: integer
+ *                   example: 1
+ *                 email:
+ *                   type: string
+ *                   example: "user@example.com"
+ *                 role:
+ *                   type: string
+ *                   example: "USER"
+ *                 is_active:
+ *                   type: boolean
+ *                   example: true
+ *                 profiles:
+ *                   type: object
+ *                   properties:
+ *                     first_name:
+ *                       type: string
+ *                       example: "John"
+ *                     last_name:
+ *                       type: string
+ *                       example: "Doe"
+ *                     country:
+ *                       type: string
+ *                       example: "USA"
+ *                     city:
+ *                       type: string
+ *                       example: "New York"
+ *                 avatars:
+ *                   type: object
+ *                   properties:
+ *                     path:
+ *                       type: string
+ *                       example: "/uploads/avatar.jpg"
+ *       404:
+ *         description: Пользователь не найден
+ *       500:
+ *         description: Внутренняя ошибка сервера
+ */
+
+
+
+
+
+
+/**
+ * @swagger
+ * /users:
+ *   get:
+ *     summary: Получить список пользователей
+ *     description: Возвращает список пользователей с возможностью пагинации и поиска.
+ *     tags:
+ *       - Users
+ *     security:
+ *       - bearerAuth: []  # Защита JWT для этого эндпоинта
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *         description: Номер страницы для пагинации
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           default: 10
+ *         description: Количество записей на странице
+ *       - in: query
+ *         name: searchField
+ *         schema:
+ *           type: string
+ *           example: "email"
+ *         description: Поле для поиска
+ *       - in: query
+ *         name: searchValue
+ *         schema:
+ *           type: string
+ *           example: "example@gmail.com"
+ *         description: Значение для поиска
+ *     responses:
+ *       200:
+ *         description: Успешное получение списка пользователей
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 users:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       id:
+ *                         type: integer
+ *                         example: 1
+ *                       email:
+ *                         type: string
+ *                         example: "user@example.com"
+ *                       role:
+ *                         type: string
+ *                         example: "USER"
+ *                       is_active:
+ *                         type: boolean
+ *                         example: true
+ *                       profiles:
+ *                         type: object
+ *                         properties:
+ *                           first_name:
+ *                             type: string
+ *                             example: "John"
+ *                           last_name:
+ *                             type: string
+ *                             example: "Doe"
+ *                           country:
+ *                             type: string
+ *                             example: "USA"
+ *                           city:
+ *                             type: string
+ *                             example: "New York"
+ *                       avatars:
+ *                         type: object
+ *                         properties:
+ *                           path:
+ *                             type: string
+ *                             example: "/uploads/avatar.jpg"
+ *       500:
+ *         description: Внутренняя ошибка сервера
+ */
+
+
+
+
+
+/**
+ * @swagger
+ * /users/{id}:
+ *   patch:
+ *     summary: Редактирование данных пользователя
+ *     description: Обновляет данные пользователя, включая профиль и аватар, на основе переданного ID.
+ *     tags:
+ *       - Users
+ *     security:
+ *       - bearerAuth: []  # Защита JWT для этого эндпоинта
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: Идентификатор пользователя
+ *         schema:
+ *           type: integer
+ *           example: 1
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 example: "user@example.com"
+ *               role:
+ *                 type: string
+ *                 example: "USER"
+ *               is_active:
+ *                 type: boolean
+ *                 example: true
+ *               profile:
+ *                 type: object
+ *                 properties:
+ *                   first_name:
+ *                     type: string
+ *                     example: "John"
+ *                   last_name:
+ *                     type: string
+ *                     example: "Doe"
+ *                   country:
+ *                     type: string
+ *                     example: "USA"
+ *                   city:
+ *                     type: string
+ *                     example: "New York"
+ *               avatar:
+ *                 type: object
+ *                 properties:
+ *                   path:
+ *                     type: string
+ *                     description: Путь к файлу аватара
+ *                     example: "/uploads/avatars/avatar.jpg"
+ *     responses:
+ *       200:
+ *         description: Успешное редактирование пользователя
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: integer
+ *                   example: 1
+ *                 email:
+ *                   type: string
+ *                   example: "user@example.com"
+ *                 role:
+ *                   type: string
+ *                   example: "USER"
+ *                 is_active:
+ *                   type: boolean
+ *                   example: true
+ *                 profile:
+ *                   type: object
+ *                   properties:
+ *                     first_name:
+ *                       type: string
+ *                       example: "John"
+ *                     last_name:
+ *                       type: string
+ *                       example: "Doe"
+ *                     country:
+ *                       type: string
+ *                       example: "USA"
+ *                     city:
+ *                       type: string
+ *                       example: "New York"
+ *                 avatar:
+ *                   type: object
+ *                   properties:
+ *                     path:
+ *                       type: string
+ *                       example: "/uploads/avatars/avatar.jpg"
+ *       400:
+ *         description: Ошибка валидации данных
+ *       404:
+ *         description: Пользователь не найден
+ *       500:
+ *         description: Внутренняя ошибка сервера
+ */
+
+
+
+
+
+/**
+ * @swagger
+ * /users/{id}:
+ *   put:
+ *     summary: Обновление данных пользователя
+ *     description: Обновляет полные данные пользователя, включая профиль и аватар, на основе переданного ID.
+ *     tags:
+ *       - Users
+ *     security:
+ *       - bearerAuth: []  # Защита JWT для этого эндпоинта
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: Идентификатор пользователя
+ *         schema:
+ *           type: integer
+ *           example: 1
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 example: "user@example.com"
+ *               role:
+ *                 type: string
+ *                 example: "USER"
+ *               is_active:
+ *                 type: boolean
+ *                 example: true
+ *               profile:
+ *                 type: object
+ *                 properties:
+ *                   first_name:
+ *                     type: string
+ *                     example: "John"
+ *                   last_name:
+ *                     type: string
+ *                     example: "Doe"
+ *                   country:
+ *                     type: string
+ *                     example: "USA"
+ *                   city:
+ *                     type: string
+ *                     example: "New York"
+ *               avatar:
+ *                 type: object
+ *                 properties:
+ *                   path:
+ *                     type: string
+ *                     description: Путь к файлу аватара
+ *                     example: "/uploads/avatars/avatar.jpg"
+ *     responses:
+ *       200:
+ *         description: Успешное обновление пользователя
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: integer
+ *                   example: 1
+ *                 email:
+ *                   type: string
+ *                   example: "user@example.com"
+ *                 role:
+ *                   type: string
+ *                   example: "USER"
+ *                 is_active:
+ *                   type: boolean
+ *                   example: true
+ *                 profile:
+ *                   type: object
+ *                   properties:
+ *                     first_name:
+ *                       type: string
+ *                       example: "John"
+ *                     last_name:
+ *                       type: string
+ *                       example: "Doe"
+ *                     country:
+ *                       type: string
+ *                       example: "USA"
+ *                     city:
+ *                       type: string
+ *                       example: "New York"
+ *                 avatar:
+ *                   type: object
+ *                   properties:
+ *                     path:
+ *                       type: string
+ *                       example: "/uploads/avatars/avatar.jpg"
+ *       400:
+ *         description: Ошибка валидации данных
+ *       404:
+ *         description: Пользователь не найден
+ *       500:
+ *         description: Внутренняя ошибка сервера
+ */
+
+
+
+
+
+
+/**
+ * @swagger
+ * /users/{id}:
+ *   delete:
+ *     summary: Удаление пользователя
+ *     description: Удаляет пользователя по указанному ID.
+ *     tags:
+ *       - Users
+ *     security:
+ *       - bearerAuth: []  # Защита JWT для этого эндпоинта
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: Идентификатор пользователя
+ *         schema:
+ *           type: integer
+ *           example: 1
+ *     responses:
+ *       200:
+ *         description: Успешное удаление пользователя
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Пользователь успешно удален"
+ *       400:
+ *         description: Неверный запрос или пользователь не найден
+ *       404:
+ *         description: Пользователь не найден
+ *       500:
+ *         description: Внутренняя ошибка сервера
+ */
+
+
+
+
+
+/**
+ * @swagger
+ * /user-edited-avatar/{id}:
+ *   patch:
+ *     summary: Редактировать аватар пользователя
+ *     description: Загружает новый аватар пользователя.
+ *     tags:
+ *       - Profile-manipulation
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: Идентификатор пользователя
+ *         schema:
+ *           type: integer
+ *           example: 1
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               file:
+ *                 type: string
+ *                 format: binary
+ *     responses:
+ *       200:
+ *         description: Аватар успешно отредактирован
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: integer
+ *                   example: 1
+ *                 path:
+ *                   type: string
+ *                   example: "/uploads/avatars/avatar.jpg"
+ *       400:
+ *         description: Неверные данные запроса
+ *       404:
+ *         description: Пользователь не найден
+ *       500:
+ *         description: Внутренняя ошибка сервера
+ */
+
+
+
+
+
+/**
+ * @swagger
+ * /user-edit-profile/{id}:
+ *   patch:
+ *     summary: Редактировать профиль пользователя
+ *     description: Изменяет информацию профиля пользователя.
+ *     tags:
+ *       - Profile-manipulation
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: Идентификатор пользователя
+ *         schema:
+ *           type: integer
+ *           example: 1
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               first_name:
+ *                 type: string
+ *                 example: "John"
+ *               last_name:
+ *                 type: string
+ *                 example: "Doe"
+ *               country:
+ *                 type: string
+ *                 example: "USA"
+ *               city:
+ *                 type: string
+ *                 example: "New York"
+ *     responses:
+ *       200:
+ *         description: Профиль успешно отредактирован
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: integer
+ *                   example: 1
+ *                 first_name:
+ *                   type: string
+ *                   example: "John"
+ *                 last_name:
+ *                   type: string
+ *                   example: "Doe"
+ *                 country:
+ *                   type: string
+ *                   example: "USA"
+ *                 city:
+ *                   type: string
+ *                   example: "New York"
+ *       400:
+ *         description: Неверные данные запроса
+ *       404:
+ *         description: Пользователь не найден
+ *       500:
+ *         description: Внутренняя ошибка сервера
+ */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 //Mentor
 
 /**
@@ -1012,6 +1620,70 @@
 
 
 
+/**
+ * @swagger
+ * /requests:
+ *   get:
+ *     summary: Получить все запросы
+ *     description: Возвращает список запросов с возможностью пагинации.
+ *     tags:
+ *       - Request
+ *     security:
+ *       - bearerAuth: []  # Защита JWT для этого эндпоинта
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         required: false
+ *         description: Номер страницы
+ *         schema:
+ *           type: integer
+ *           example: 1
+ *       - in: query
+ *         name: limit
+ *         required: false
+ *         description: Количество элементов на странице
+ *         schema:
+ *           type: integer
+ *           example: 10
+ *     responses:
+ *       200:
+ *         description: Успешное получение списка запросов
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 requests:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       number:
+ *                         type: string
+ *                         example: "12345"
+ *                       name:
+ *                         type: string
+ *                         example: "Иван Иванов"
+ *                       message:
+ *                         type: string
+ *                         example: "Это сообщение от клиента."
+ *                 total:
+ *                   type: integer
+ *                   description: Общее количество запросов
+ *                   example: 100
+ *                 page:
+ *                   type: integer
+ *                   description: Текущая страница
+ *                   example: 1
+ *                 limit:
+ *                   type: integer
+ *                   description: Количество запросов на странице
+ *                   example: 10
+ *       400:
+ *         description: Ошибка валидации параметров запроса
+ *       500:
+ *         description: Внутренняя ошибка сервера
+ */
 
 
 

@@ -94,7 +94,7 @@ class CourseService {
         }
 
         const courses = await getAllCourse({ limit, offset }, whereClause, order, this.include);
-        return courses;
+        return courses;                 
     }
 }
 

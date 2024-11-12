@@ -20,6 +20,7 @@ class TransactionsService {
         const order = ordering ? [[ordering, orderingType ? orderingType : 'ACS']] : [];
 
         const transactions = await getAllTransacrion({ limit, offset }, order, where);
+        return transactions;
     }
 
     async getOneTransaction (id) {

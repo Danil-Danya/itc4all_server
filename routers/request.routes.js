@@ -8,6 +8,7 @@ const router = Router();
 
 router.post('/request', RequestController.sendRequest);
 router.get('/request/:id', jwt, RequestController.getRequest);
+router.get('/request', jwt, RequestController.getAllRequests);
 router.delete('/request/:id', jwt, RequestController.deleteRequest);
 
 

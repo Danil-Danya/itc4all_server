@@ -1,5 +1,5 @@
 import ApiError from "../exeptions/api.error.js";
-import { createRequest, deleteRequest, getOneRequest } from "../repositories/request.repository.js";
+import { createRequest, deleteRequest, getOneRequest, getAllRequests } from "../repositories/request.repository.js";
 
 import bot from "../plugins/telegram.js";
 
@@ -18,8 +18,12 @@ class RequestService {
         return createdRequest;
     }
 
-    async getAllRequests(pagination, filters) {
+    async getAllRequests(pagination) {
+        const { page, limit } = pagination;
+        const offset = limit * page - limit;
 
+        const requests = await getAllRequests({ limit, offset });
+        return requests;
     }
 
     async getOneRequest (id) {

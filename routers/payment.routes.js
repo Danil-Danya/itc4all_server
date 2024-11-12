@@ -6,6 +6,6 @@ import paymentController from "../controllers/payment.controller.js";
 
 const router = Router();
 
-router.post('/trasactions/payment/payme', paymentController.payme, error);
+router.post('/trasactions/payment/payme', mernchat, paymentController.payme, error);
 
 export default router;

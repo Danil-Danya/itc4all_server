@@ -16,7 +16,7 @@ const createUsers = async (email, password, activation_link) => {
 const getAllUsers = async (pagination, where={}, include=[]) => {
     const { limit, offset } = pagination;
 
-    const users = await UserModel.findAndCountAll({ limit, offset, distinct: true, include, where, attributes });
+    const users = await UserModel.findAndCountAll({ limit, offset, distinct: true, include, where });
 
     if (!users) {
         return ApiError.BadRequest('The users are not defined');
@@ -29,8 +29,6 @@ const getOneUser = async (where, include=[]) => {
     if (!where) {
         return ApiError.BadRequest('Where parameter must not be null or undefined');
     }
-    console.log(include);
-    
     const user = await UserModel.findOne({ where, include });  
 
     if (!user && !where.email) {

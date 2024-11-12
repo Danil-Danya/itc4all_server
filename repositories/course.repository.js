@@ -64,9 +64,9 @@ const updateCourse = async (id, courseData) => {
 
 const getOneCourse = async (id, include=[]) => {
     const course = await CoursesModel.findOne({ where: { id }, include });
-    if (!course) {
-        throw ApiError.BadRequest('Course is not found');
-    }
+    // if (!course) {
+    //     throw ApiError.BadRequest('Course is not found');
+    // }
 
     return course;
 }

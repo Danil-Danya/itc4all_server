@@ -7,6 +7,7 @@ import zoomSessionRouter from './zoomSesssion.routes.js';
 import courseRouter from './course.routes.js';
 import eventRouter from './event.routes.js';
 import videoRouter from './videos.routes.js';
+import userRouter from './user.routes.js';
 
 import { Router } from "express";
 
@@ -20,6 +21,7 @@ router.use(paymentRouter);
 router.use(zoomSessionRouter);
 router.use(courseRouter);
 router.use(eventRouter);
-router.use(videoRouter)
+router.use(videoRouter);
+router.use(userRouter);
 
 export default router;

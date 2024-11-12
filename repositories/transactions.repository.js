@@ -57,8 +57,8 @@ const getAllTransacrion = async (pagination, order=[], where={}, include=[]) => 
     return transactions;
 }
 
-const getOneTransaction = async (id) => {
-    const transaction = await TransactionModel.findOne({ where: { id } });
+const getOneTransaction = async (where) => {
+    const transaction = await TransactionModel.findOne({ where });
     if (!transaction) {
         throw ApiError.BadRequest('This transaction is not found');
     }

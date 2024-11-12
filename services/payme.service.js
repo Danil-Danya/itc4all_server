@@ -1,10 +1,13 @@
 import ApiError from "../exeptions/api.error.js";
 
+import ProfilesModel from "../models/profile.model.js";
+
 import { getOneUser } from '../repositories/user.repository.js';
 import { getOneCourse } from "../repositories/course.repository.js";
-// import { getOneZoom } from "../repositories/zoom.repository.js";
+import { getOneZoomSession } from "../repositories/zoomSessions.repository.js";
 
 import { createTransaction, getOneTransaction, editeTransaction } from "../repositories/transactions.repository.js";
+import { createTransactionPayme, getOneTransactionPayme, editTransactionPayme } from "../repositories/transavtionPayme.repository.js";
 
 class PaymeService {
     async CheckPerformTransaction (params, id) {
@@ -46,11 +49,16 @@ class PaymeService {
 
     async CreateTransaction(params, id) {
         const { user_email, product_id, product_type } = params.account;
-        const { amount } = Math.floor(params.amount / 100);
+        const amount = params.amount / 100;
 
-        await this.checkPerformTransaction(params, id);
+        await this.CheckPerformTransaction(params, id);
 
-        const currentTime = Date.now() / (1000 * 60);
+        const currentTime = Date.now();
+
+        const paymeTransaction = await paymeTransactionData({ account: params.account });
+        if (paymeTransaction) {
+            throw ApiError.MernchatError(-31099, 'Transaction with the requested account data already exists')
+        }
 
         const transaction = await getOneTransaction({ operator_unical_id: params.id });
         if (transaction) {
@@ -58,35 +66,39 @@ class PaymeService {
                 throw ApiError.MernchatError(-31008, 'Transactions has been deleted');
             }
 
-            const transactionTime = transaction.createdAt / (1000 * 60);
-            const differenceTime = transactionTime - currentTime;
-
-            if (differenceTime < process.env.WAITING_TRANSACTIONS_MINUTES) {
+            const transactionTime = new Date(transaction.createdAt).getTime();
+            const differenceTime = (currentTime - transactionTime) / (1000 * 60);
+            
+            console.log(process.env.WAITING_TRANSACTIONS_MINUTES);
+            
+            if (differenceTime > process.env.WAITING_TRANSACTIONS_MINUTES) {
                 throw ApiError.MernchatError(-31008, 'Transaction timed out');
             }
 
             return { 
                 "result": {
-                    "create_time": currentTime,
+                    "create_time": transactionTime,
                     "transaction": transaction.operator_unical_id,
                     "state": transaction.state
                 }
             }
         }
 
-        const user = await getOneUser({ email: user_email });
+        const user = await getOneUser({ email: user_email }, [{ model: ProfilesModel, as: 'profile' }]);
+        console.log(user);
+        
         if (!user) {
             throw ApiError.MernchatError(-31050, 'This user is not defined');
         }
 
-        const product = product_type === 'COURSE' ? await getOneCourse(product_id) : product_type === 'ZOOM_SESSION' ? await getOneZoom(product_id) : null;
+        const product = product_type === 'COURSE' ? await getOneCourse(product_id) : product_type === 'ZOOM_SESSION' ? await getOneZoomSession(product_id) : null;
         if (!product) {
             throw ApiError.MernchatError(-31050, 'The product is not defined');
         }
 
         const transactionData = {
-            user_first_name: user.first_name,
-            user_last_name: user.last_name,
+            user_first_name: user.profile.first_name,
+            user_last_name: user.profile.last_name,
             product_name: product.name,
             operator_unical_id: params.id,
             payment_method: 'PAYME',
@@ -95,14 +107,31 @@ class PaymeService {
             amount,
         }
 
+        const paymeTransactionData = {
+            time: currentTime,
+            amount,
+            account: params.account,
+            create_time: currentTime,
+            cancel_time: 0,
+            transaction: params.id,
+            state: 1,
+            reason: null,
+            receivers: []
+        }
+
         const newTrasaction = await createTransaction(transactionData);
         if (!newTrasaction) {
             throw ApiError.MernchatError(-31008, 'Transaction does not be created');
         }
 
+        const newPaymeTransaction = await createTransactionPayme(paymeTransactionData);
+        if (!newPaymeTransaction) {
+            throw ApiError.MernchatError(-31008, 'Transaction does not be created');
+        }
+
         return {
             "result": {
-                "create_time": currentTime,
+                "create_time": new Date(newTrasaction.createdAt).getTime(),
                 "transaction": newTrasaction.operator_unical_id,
                 "state": newTrasaction.state
             }
@@ -110,12 +139,12 @@ class PaymeService {
     }
 
     async PerformTransaction(params) {
-        const { id } = params.id;
+        const { id } = params;
         if (!id) {
             throw ApiError.MernchatError(-31008, 'Id parametr is required')
         }
 
-        const transaction = getOneTransaction({ operator_unical_id: id });
+        const transaction = await getOneTransaction({ operator_unical_id: id });
         if (!transaction) {
             throw ApiError.MernchatError(-31003, 'Transactions is not defined');
         }
@@ -124,7 +153,7 @@ class PaymeService {
             throw ApiError.MernchatError(-31008, 'Transactions has been deleted');
         }
 
-        const editedTransaction = editeTransaction({ operator_unical_id: id }, { state: 2 });
+        const editedTransaction = await editeTransaction({ operator_unical_id: id }, { state: 2 });
         if (!editedTransaction) {
             throw ApiError.MernchatError(-31008, 'Transactions does not be edited');
         }
@@ -133,9 +162,20 @@ class PaymeService {
             "result": {
                 "transaction": transaction.operator_unical_id,
                 "perform_time": Date.now(),
-                "state": transaction.state
+                "state": editedTransaction.state
             }
         }
+    }
+
+    async CheckTransaction (params) {
+        const id = params.id;
+        const transaction = await getOneTransactionPayme({ transaction: id });
+
+        if (!transaction) {
+            throw ApiError.MernchatError(-31003, 'Transaction is not found')
+        }
+
+        return transaction;
     }
 
     async CancelTransaction(params) {
@@ -153,14 +193,6 @@ class PaymeService {
             throw ApiError.MernchatError(-31008, 'Transaction has been deleted')
         }
         //const editedTransaction 
-    }
-
-    async CheckTransaction(params, id) {
-
-    }
-
-    async GetStatement(params, id) {
-
     }
 }
 
